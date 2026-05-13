@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1092719245322",
+    "project_id": "hi-beauty-59d59",
+    "storage_bucket": "hi-beauty-59d59.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092719245322:android:0a9ae8d46dbbf64f6287f3",
+        "android_client_info": {
+          "package_name": "com.example.hibeauty"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzoAExNkaIjKN1JYa_nVTegN1779qmgd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

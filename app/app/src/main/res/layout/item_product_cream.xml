@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_marginStart="12dp"
+    android:layout_weight="1"
+    android:background="@drawable/bg_card_large"
+    android:elevation="6dp"
+    android:padding="20dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+        <TextView android:layout_width="match_parent" android:layout_height="175dp" android:background="@drawable/bg_product_image" android:gravity="center" android:text="🌙" android:textSize="48sp" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Cremas" android:textColor="@color/hib_muted" android:textSize="15sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="7dp" android:text="Crema Hidratante Noche" android:textColor="@color/hib_ink" android:textSize="18sp" android:textStyle="bold" />
+        <Space android:layout_width="1dp" android:layout_height="0dp" android:layout_weight="1" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="$52.000" android:textColor="@color/hib_hot_pink" android:textSize="21sp" android:textStyle="bold" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="♡" android:textColor="#FF8AC8" android:textSize="30sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="32dp" android:layout_gravity="top|end" android:background="@drawable/bg_badge" android:gravity="center" android:paddingStart="12dp" android:paddingEnd="12dp" android:text="Premium" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" />
+</FrameLayout>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hib_page"
+    android:fillViewport="true"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="110dp">
+
+        <!-- HEADER -->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:background="@drawable/bg_header_gradient"
+            android:padding="24dp">
+
+            <!-- PROFILE -->
+
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="top|end"
+                android:background="@drawable/bg_search"
+                android:elevation="8dp">
+
+                <ImageView
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_simple_person" />
+
+            </FrameLayout>
+
+            <!-- CONTENT -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HiBeauty"
+                    android:textColor="@color/hib_pink"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:maxLines="1"
+                    android:text="Hola hermosa 💕"
+                    android:textColor="#9B124D"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2"
+                    android:text="Beauty delivery suave, rápido y hecho para tu rutina."
+                    android:textColor="#9B124D"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- SEARCH -->
+
+                <TextView
+                    android:id="@+id/searchBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/bg_search"
+                    android:gravity="center_vertical"
+                    android:paddingStart="22dp"
+                    android:paddingEnd="22dp"
+                    android:text="¿Qué necesitas hoy? ✨"
+                    android:textColor="@color/hib_muted"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <!-- CATEGORIES -->
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <include
+                    android:id="@+id/categorySkincare"
+                    layout="@layout/item_category_skincare" />
+
+                <include
+                    android:id="@+id/categoryMakeup"
+                    layout="@layout/item_category_makeup" />
+
+                <include
+                    android:id="@+id/categoryFragrance"
+                    layout="@layout/item_category_fragrance" />
+
+                <include
+                    android:id="@+id/categoryWellness"
+                    layout="@layout/item_category_wellness" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <!-- QUICK ACTIONS -->
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <include
+                    android:id="@+id/quickRoutineCard"
+                    layout="@layout/item_quick_routine" />
+
+                <include
+                    android:id="@+id/quickOrdersCard"
+                    layout="@layout/item_quick_orders" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <!-- TITLE -->
+
+        <TextView
+            android:id="@+id/homeProductsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="34dp"
+            android:text="Productos de la semana ✨"
+            android:textColor="@color/hib_ink"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black" />
+
+        <!-- EMPTY -->
+
+        <TextView
+            android:id="@+id/homeProductsEmptyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_card_large"
+            android:elevation="4dp"
+            android:padding="20dp"
+            android:text="Cargando productos..."
+            android:textColor="@color/hib_muted"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- PRODUCTS -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/homeProductsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="18dp"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- GUIDE -->
+
+        <LinearLayout
+            android:id="@+id/skincareGuideBanner"
+            android:layout_width="match_parent"
+            android:layout_height="238dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_banner_gradient"
+            android:elevation="5dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="26dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cuida tu piel ✨"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-black"
+                android:maxLines="2"
+                android:text="Rutina perfecta para una piel glow"
+                android:textColor="#FFFFFF"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btnOpenGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_white_button"
+                android:gravity="center"
+                android:minWidth="10dp"
+                android:paddingStart="34dp"
+                android:paddingEnd="34dp"
+                android:text="Ver guía"
+                android:textColor="#7B1CE2"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

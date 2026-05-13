@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_nav_heart"
+        android:title="Inicio" />
+    <item
+        android:id="@+id/nav_discover"
+        android:icon="@drawable/ic_nav_sparkle"
+        android:title="Descubre" />
+    <item
+        android:id="@+id/nav_cart"
+        android:icon="@drawable/ic_nav_bag"
+        android:title="Carrito" />
+    <item
+        android:id="@+id/nav_routine"
+        android:icon="@drawable/ic_nav_calendar"
+        android:title="Rutina" />
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_nav_person"
+        android:title="Perfil" />
+</menu>

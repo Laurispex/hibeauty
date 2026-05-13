@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hib_page"
+    android:paddingStart="32dp"
+    android:paddingEnd="32dp"
+    android:paddingBottom="28dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:text="Perfil 👸" android:textColor="@color/hib_ink" android:textSize="32sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Tu espacio personal en HiBeauty" android:textColor="@color/hib_muted" android:textSize="16sp" android:textStyle="bold" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="124dp" android:layout_marginTop="24dp" android:background="@drawable/bg_card_large" android:elevation="5dp" android:gravity="center_vertical" android:orientation="horizontal" android:padding="24dp">
+            <TextView android:layout_width="76dp" android:layout_height="76dp" android:background="@drawable/bg_profile_avatar" android:gravity="center" android:text="L" android:textColor="#FFFFFF" android:textSize="32sp" android:textStyle="bold" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Laura Beauty" android:textColor="@color/hib_ink" android:textSize="22sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nivel Glow Lover" android:textColor="@color/hib_pink" android:textSize="16sp" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <include android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="22dp" layout="@layout/item_profile_address" />
+        <include android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" layout="@layout/item_profile_notifications" />
+        <include android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" layout="@layout/item_profile_settings" />
+    </LinearLayout>
+</ScrollView>

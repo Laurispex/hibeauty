@@ -1,0 +1,11 @@
+<resources>
+    <color name="ic_launcher_background">#F93698</color>
+    <color name="hib_page">#FFF8FD</color>
+    <color name="hib_pink">#F93698</color>
+    <color name="hib_hot_pink">#FF1F8F</color>
+    <color name="hib_ink">#1F2937</color>
+    <color name="hib_muted">#98A1B2</color>
+    <color name="hib_lavender">#EBDDFF</color>
+    <color name="hib_blush">#FFE2F2</color>
+    <color name="hib_card">#FFFFFF</color>
+</resources>

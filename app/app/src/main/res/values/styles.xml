@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.HiBeauty" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/hib_page</item>
+        <item name="android:navigationBarColor">@color/hib_card</item>
+        <item name="colorPrimary">@color/hib_pink</item>
+        <item name="colorPrimaryVariant">@color/hib_pink</item>
+        <item name="colorSecondary">@color/hib_pink</item>
+    </style>
+</resources>

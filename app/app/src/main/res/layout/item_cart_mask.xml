@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="112dp" android:background="@drawable/bg_card_white" android:elevation="5dp" android:gravity="center_vertical" android:orientation="horizontal" android:padding="18dp">
+    <TextView android:layout_width="74dp" android:layout_height="74dp" android:background="@drawable/bg_product_image" android:gravity="center" android:text="💖" android:textSize="32sp" />
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_weight="1" android:orientation="vertical">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Mascarilla de Colágeno" android:textColor="@color/hib_ink" android:textSize="18sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="1 unidad - hidratación" android:textColor="@color/hib_muted" android:textSize="14sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="$28.000" android:textColor="@color/hib_hot_pink" android:textSize="18sp" android:textStyle="bold" />
+    </LinearLayout>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🗑" android:textSize="22sp" />
+</LinearLayout>

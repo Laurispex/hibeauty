@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hib_page"
+    android:paddingStart="32dp"
+    android:paddingEnd="32dp"
+    android:paddingBottom="28dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:text="Carrito 🛍️" android:textColor="@color/hib_ink" android:textSize="32sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Tus productos listos para comprar" android:textColor="@color/hib_muted" android:textSize="16sp" android:textStyle="bold" />
+        <include android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" layout="@layout/item_cart_serum" />
+        <include android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" layout="@layout/item_cart_mask" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:background="@drawable/bg_category_skincare" android:orientation="vertical" android:padding="22dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Subtotal                                      $73.000" android:textColor="@color/hib_ink" android:textSize="17sp" android:textStyle="bold" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="Domicilio                                      $6.000" android:textColor="@color/hib_ink" android:textSize="17sp" android:textStyle="bold" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:text="Total                                          $79.000" android:textColor="@color/hib_hot_pink" android:textSize="19sp" android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView android:layout_width="match_parent" android:layout_height="58dp" android:layout_marginTop="22dp" android:background="@drawable/bg_button_pink" android:gravity="center" android:text="Finalizar compra" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>
