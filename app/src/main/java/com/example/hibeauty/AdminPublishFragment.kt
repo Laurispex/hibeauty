@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.hibeauty.R
 import com.example.hibeauty.databinding.FragmentAdminPublishBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -12,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
 
     private var _binding: FragmentAdminPublishBinding? = null
+
     private val binding get() = _binding!!
 
     private val auth: FirebaseAuth by lazy {
@@ -22,18 +25,58 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         FirebaseFirestore.getInstance()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
 
-        _binding = FragmentAdminPublishBinding.bind(view)
+        super.onViewCreated(
+            view,
+            savedInstanceState
+        )
+
+        _binding =
+            FragmentAdminPublishBinding.bind(view)
+
+        // BACK BUTTON
+
+        binding.btnBackPublish.setOnClickListener {
+
+            parentFragmentManager.popBackStack()
+        }
+
+        // PUBLISH BUTTON
 
         binding.btnPublishProduct.setOnClickListener {
+
             publishProduct()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        activity
+            ?.findViewById<BottomNavigationView>(
+                R.id.bottom_navigation
+            )
+            ?.visibility = View.GONE
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        activity
+            ?.findViewById<BottomNavigationView>(
+                R.id.bottom_navigation
+            )
+            ?.visibility = View.VISIBLE
+    }
+
     private fun publishProduct() {
 
-        val currentUser = auth.currentUser
+        val currentUser =
+            auth.currentUser
 
         if (currentUser == null) {
 
@@ -43,19 +86,29 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         }
 
         val name =
-            binding.productName.text.toString().trim()
+            binding.productName.text
+                .toString()
+                .trim()
 
         val description =
-            binding.productDescription.text.toString().trim()
+            binding.productDescription.text
+                .toString()
+                .trim()
 
         val imageUrl =
-            binding.productImageUrl.text.toString().trim()
+            binding.productImageUrl.text
+                .toString()
+                .trim()
 
         val benefits =
-            binding.productBenefits.text.toString().trim()
+            binding.productBenefits.text
+                .toString()
+                .trim()
 
         val howToUse =
-            binding.productHowToUse.text.toString().trim()
+            binding.productHowToUse.text
+                .toString()
+                .trim()
 
         val category =
             getSelectedCategory()
@@ -75,39 +128,41 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         val isOffer =
             binding.checkOffer.isChecked
 
-        // PRESENTACIONES
-
         val price30 =
-            binding.price30.text.toString()
+            binding.price30.text
+                .toString()
                 .trim()
                 .toLongOrNull()
 
         val stock30 =
-            binding.stock30.text.toString()
+            binding.stock30.text
+                .toString()
                 .trim()
                 .toLongOrNull()
 
         val price50 =
-            binding.price50.text.toString()
+            binding.price50.text
+                .toString()
                 .trim()
                 .toLongOrNull()
 
         val stock50 =
-            binding.stock50.text.toString()
+            binding.stock50.text
+                .toString()
                 .trim()
                 .toLongOrNull()
 
         val price100 =
-            binding.price100.text.toString()
+            binding.price100.text
+                .toString()
                 .trim()
                 .toLongOrNull()
 
         val stock100 =
-            binding.stock100.text.toString()
+            binding.stock100.text
+                .toString()
                 .trim()
                 .toLongOrNull()
-
-        // VALIDACIONES
 
         if (
             name.isEmpty() ||
@@ -122,17 +177,13 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
             return
         }
 
-        if (!imageUrl.startsWith("http")) {
-
-            toast("La URL debe iniciar con http")
-
-            return
-        }
-
         if (
-            price30 == null || stock30 == null ||
-            price50 == null || stock50 == null ||
-            price100 == null || stock100 == null
+            price30 == null ||
+            stock30 == null ||
+            price50 == null ||
+            stock50 == null ||
+            price100 == null ||
+            stock100 == null
         ) {
 
             toast("Completa todas las presentaciones")
@@ -140,7 +191,8 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
             return
         }
 
-        binding.btnPublishProduct.isEnabled = false
+        binding.btnPublishProduct.isEnabled =
+            false
 
         binding.btnPublishProduct.text =
             "Publicando..."
@@ -149,8 +201,6 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
             db.collection("products")
                 .document()
                 .id
-
-        // PRESENTACIONES
 
         val presentations = hashMapOf(
 
@@ -169,8 +219,6 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
                 "stock" to stock100
             )
         )
-
-        // PRODUCTO
 
         val product = hashMapOf(
 
@@ -202,7 +250,8 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
 
             "createdBy" to currentUser.uid,
 
-            "createdAt" to FieldValue.serverTimestamp()
+            "createdAt" to
+                    FieldValue.serverTimestamp()
         )
 
         db.collection("products")
@@ -211,27 +260,26 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
 
             .addOnSuccessListener {
 
-                if (_binding == null)
-                    return@addOnSuccessListener
-
-                showPublishButtonAgain()
+                toast("Producto publicado ✨")
 
                 clearForm()
 
-                toast("Producto publicado ✨")
+                binding.btnPublishProduct.isEnabled =
+                    true
+
+                binding.btnPublishProduct.text =
+                    "Publicar producto"
             }
 
-            .addOnFailureListener { error ->
+            .addOnFailureListener {
 
-                if (_binding == null)
-                    return@addOnFailureListener
+                toast("Error publicando producto")
 
-                showPublishButtonAgain()
+                binding.btnPublishProduct.isEnabled =
+                    true
 
-                toast(
-                    error.message
-                        ?: "Error publicando producto"
-                )
+                binding.btnPublishProduct.text =
+                    "Publicar producto"
             }
     }
 
@@ -280,22 +328,6 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         binding.price100.text?.clear()
 
         binding.stock100.text?.clear()
-
-        binding.checkFeatured.isChecked = false
-
-        binding.checkNew.isChecked = false
-
-        binding.checkOffer.isChecked = false
-
-        binding.categorySkincare.isChecked = true
-    }
-
-    private fun showPublishButtonAgain() {
-
-        binding.btnPublishProduct.isEnabled = true
-
-        binding.btnPublishProduct.text =
-            "Publicar producto"
     }
 
     private fun toast(message: String) {

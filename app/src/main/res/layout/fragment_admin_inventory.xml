@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/hib_page"
     android:paddingStart="24dp"
+    android:paddingTop="24dp"
     android:paddingEnd="24dp"
-    android:paddingBottom="130dp">
+    android:paddingBottom="24dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- BACK -->
+
+        <ImageView
+            android:id="@+id/btnBackInventory"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/bg_soft_circle"
+            android:padding="12dp"
+            android:src="@drawable/ic_back" />
+
+        <!-- HEADER -->
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="28dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_admin_gradient"
+            android:elevation="6dp"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:padding="24dp">
@@ -33,11 +48,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Productos publicados, precios y stock por tamaño."
+                android:text="Gestiona productos, stock y publicaciones."
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
+        <!-- INFO -->
 
         <TextView
             android:id="@+id/adminInventoryText"
@@ -52,11 +69,30 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <!-- LIST -->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/adminInventoryRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
             android:nestedScrollingEnabled="false" />
+
+        <!-- ADD PRODUCT BUTTON -->
+
+        <TextView
+            android:id="@+id/btnAddProduct"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_button_pink"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:text="+ Añadir producto"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold" />
     </LinearLayout>
+
 </ScrollView>

@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/hib_page"
     android:paddingStart="24dp"
+    android:paddingTop="24dp"
     android:paddingEnd="24dp"
-    android:paddingBottom="130dp">
+    android:paddingBottom="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- BACK -->
+
+        <ImageView
+            android:id="@+id/btnBackPromos"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/bg_soft_circle"
+            android:padding="12dp"
+            android:src="@drawable/ic_back" />
+
+        <!-- HEADER -->
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="154dp"
-            android:layout_marginTop="28dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_admin_gradient"
             android:elevation="5dp"
             android:gravity="center_vertical"
@@ -39,6 +53,8 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
+        <!-- CARD -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,6 +107,8 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- INFO -->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,4 +121,5 @@
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
+
 </ScrollView>

@@ -1,336 +1,361 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/hib_page"
-    android:padding="24dp">
+    android:paddingStart="24dp"
+    android:paddingTop="24dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="24dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_soft_panel"
-        android:elevation="6dp"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Publicar producto"
-            android:textColor="@color/hib_ink"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+        <!-- BOTÓN ATRÁS -->
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Crea productos con imagen, beneficios y stock por presentación."
-            android:textColor="@color/hib_muted"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/btnBackPublish"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/bg_soft_circle"
+            android:padding="12dp"
+            android:src="@drawable/ic_back" />
 
-        <EditText
-            android:id="@+id/productName"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="22dp"
-            android:background="@drawable/bg_search"
-            android:hint="Nombre del producto"
-            android:paddingStart="18dp"
-            android:paddingEnd="18dp"
-            android:textColor="@color/hib_ink"
-            android:textColorHint="@color/hib_muted" />
-
-        <EditText
-            android:id="@+id/productDescription"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_search"
-            android:gravity="top"
-            android:hint="Descripción"
-            android:padding="18dp"
-            android:textColor="@color/hib_ink"
-            android:textColorHint="@color/hib_muted" />
-
-        <EditText
-            android:id="@+id/productImageUrl"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_search"
-            android:hint="URL de imagen del producto"
-            android:inputType="textUri"
-            android:paddingStart="18dp"
-            android:paddingEnd="18dp"
-            android:textColor="@color/hib_ink"
-            android:textColorHint="@color/hib_muted" />
-
-        <EditText
-            android:id="@+id/productBenefits"
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_search"
-            android:gravity="top"
-            android:hint="Beneficios separados por coma. Ej: Ilumina, Hidrata, Suaviza"
-            android:padding="18dp"
-            android:textColor="@color/hib_ink"
-            android:textColorHint="@color/hib_muted" />
-
-        <EditText
-            android:id="@+id/productHowToUse"
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_search"
-            android:gravity="top"
-            android:hint="Cómo usar el producto"
-            android:padding="18dp"
-            android:textColor="@color/hib_ink"
-            android:textColorHint="@color/hib_muted" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Opciones destacadas"
-            android:textColor="@color/hib_ink"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/checkFeatured"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="⭐ Bestseller"
-            android:textColor="@color/hib_ink"
-            android:textSize="16sp" />
-
-        <CheckBox
-            android:id="@+id/checkNew"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🆕 Nuevo"
-            android:textColor="@color/hib_ink"
-            android:textSize="16sp" />
-
-        <CheckBox
-            android:id="@+id/checkOffer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🏷 Oferta"
-            android:textColor="@color/hib_ink"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/productOldPrice"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_search"
-            android:hint="Precio anterior (si es oferta)"
-            android:inputType="number"
-            android:paddingStart="18dp"
-            android:paddingEnd="18dp"
-            android:textColor="@color/hib_ink"
-            android:textColorHint="@color/hib_muted" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="Categoría"
-            android:textColor="@color/hib_ink"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/productCategoryGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/categorySkincare"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:checked="true"
-                android:text="Skincare"
-                android:textColor="@color/hib_ink" />
-
-            <RadioButton
-                android:id="@+id/categoryMakeup"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="Maquillaje"
-                android:textColor="@color/hib_ink" />
-
-            <RadioButton
-                android:id="@+id/categoryFragrance"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="Fragancias"
-                android:textColor="@color/hib_ink" />
-
-            <RadioButton
-                android:id="@+id/categoryWellness"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="Bienestar"
-                android:textColor="@color/hib_ink" />
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="Presentaciones"
-            android:textColor="@color/hib_ink"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Define precio y stock por tamaño. Si no hay stock, el usuario no podrá comprar esa presentación."
-            android:textColor="@color/hib_muted"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="30ml"
-            android:textColor="@color/hib_pink"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+        <!-- CARD PRINCIPAL -->
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/price30"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="7dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_search"
-                android:hint="Precio"
-                android:inputType="number"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
-
-            <EditText
-                android:id="@+id/stock30"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="7dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_search"
-                android:hint="Stock"
-                android:inputType="number"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="50ml"
-            android:textColor="@color/hib_pink"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:background="@drawable/bg_soft_panel"
+            android:elevation="6dp"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            <!-- TITULO -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Publicar producto"
+                android:textColor="@color/hib_ink"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Crea productos con stock, precios y categorías."
+                android:textColor="@color/hib_muted"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- NOMBRE -->
 
             <EditText
-                android:id="@+id/price50"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="7dp"
-                android:layout_weight="1"
+                android:id="@+id/productName"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
                 android:background="@drawable/bg_search"
-                android:hint="Precio"
-                android:inputType="number"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+                android:hint="Nombre del producto"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:textColor="@color/hib_ink"
+                android:textColorHint="@color/hib_muted" />
+
+            <!-- DESCRIPCIÓN -->
 
             <EditText
-                android:id="@+id/stock50"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="7dp"
-                android:layout_weight="1"
+                android:id="@+id/productDescription"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="14dp"
                 android:background="@drawable/bg_search"
-                android:hint="Stock"
+                android:gravity="top"
+                android:hint="Descripción"
+                android:padding="18dp"
+                android:textColor="@color/hib_ink"
+                android:textColorHint="@color/hib_muted" />
+
+            <!-- IMAGEN -->
+
+            <EditText
+                android:id="@+id/productImageUrl"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_search"
+                android:hint="URL de imagen"
+                android:inputType="textUri"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:textColor="@color/hib_ink"
+                android:textColorHint="@color/hib_muted" />
+
+            <!-- BENEFICIOS -->
+
+            <EditText
+                android:id="@+id/productBenefits"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_search"
+                android:gravity="top"
+                android:hint="Beneficios del producto"
+                android:padding="18dp"
+                android:textColor="@color/hib_ink"
+                android:textColorHint="@color/hib_muted" />
+
+            <!-- USO -->
+
+            <EditText
+                android:id="@+id/productHowToUse"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_search"
+                android:gravity="top"
+                android:hint="Cómo usar"
+                android:padding="18dp"
+                android:textColor="@color/hib_ink"
+                android:textColorHint="@color/hib_muted" />
+
+            <!-- PRECIO ANTERIOR -->
+
+            <EditText
+                android:id="@+id/productOldPrice"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_search"
+                android:hint="Precio anterior"
                 android:inputType="number"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp" />
+
+            <!-- OPCIONES -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="Opciones destacadas"
+                android:textColor="@color/hib_ink"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkFeatured"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="⭐ Bestseller" />
+
+            <CheckBox
+                android:id="@+id/checkNew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🆕 Nuevo" />
+
+            <CheckBox
+                android:id="@+id/checkOffer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🏷 Oferta" />
+
+            <!-- CATEGORÍA -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="Categoría"
+                android:textColor="@color/hib_ink"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/productCategoryGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/categorySkincare"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:checked="true"
+                    android:text="Skincare" />
+
+                <RadioButton
+                    android:id="@+id/categoryMakeup"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Maquillaje" />
+
+                <RadioButton
+                    android:id="@+id/categoryFragrance"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Fragancias" />
+
+                <RadioButton
+                    android:id="@+id/categoryWellness"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Bienestar" />
+            </RadioGroup>
+
+            <!-- PRESENTACIONES -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Presentaciones"
+                android:textColor="@color/hib_ink"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- 30ML -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="30ml"
+                android:textColor="@color/hib_ink"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/price30"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search"
+                    android:hint="Precio"
+                    android:inputType="number"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+
+                <EditText
+                    android:id="@+id/stock30"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search"
+                    android:hint="Stock"
+                    android:inputType="number"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+            </LinearLayout>
+
+            <!-- 50ML -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="50ml"
+                android:textColor="@color/hib_ink"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/price50"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search"
+                    android:hint="Precio"
+                    android:inputType="number"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+
+                <EditText
+                    android:id="@+id/stock50"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search"
+                    android:hint="Stock"
+                    android:inputType="number"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+            </LinearLayout>
+
+            <!-- 100ML -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="100ml"
+                android:textColor="@color/hib_ink"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/price100"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search"
+                    android:hint="Precio"
+                    android:inputType="number"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+
+                <EditText
+                    android:id="@+id/stock100"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search"
+                    android:hint="Stock"
+                    android:inputType="number"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+            </LinearLayout>
+
+            <!-- BOTÓN -->
+
+            <TextView
+                android:id="@+id/btnPublishProduct"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/bg_button_pink"
+                android:gravity="center"
+                android:text="Publicar producto"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="100ml"
-            android:textColor="@color/hib_pink"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/price100"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="7dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_search"
-                android:hint="Precio"
-                android:inputType="number"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
-
-            <EditText
-                android:id="@+id/stock100"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="7dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_search"
-                android:hint="Stock"
-                android:inputType="number"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/btnPublishProduct"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/bg_button_pink"
-            android:gravity="center"
-            android:text="Publicar producto"
-            android:textColor="#FFFFFF"
-            android:textSize="17sp"
-            android:textStyle="bold" />
     </LinearLayout>
+
 </ScrollView>

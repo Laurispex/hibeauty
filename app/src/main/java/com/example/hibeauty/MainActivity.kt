@@ -56,10 +56,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // 🔥 FORZAR LOGOUT TEMPORAL
-        // SOLO PARA PRUEBAS DE BLOQUEO
-
-        FirebaseAuth.getInstance()
-            .signOut()
+        // PARA QUE LA APP SIEMPRE INICIE LIMPIA
+        FirebaseAuth.getInstance().signOut()
 
         binding =
             ActivityMainBinding.inflate(layoutInflater)
@@ -88,10 +86,7 @@ class MainActivity : AppCompatActivity() {
         showUserNavigation()
 
         if (savedInstanceState == null) {
-
-            binding.bottomNavigation.selectedItemId =
-                R.id.nav_home
-
+            binding.bottomNavigation.selectedItemId = R.id.nav_home
             showFragment(HomeFragment())
         }
     }
@@ -214,9 +209,9 @@ class MainActivity : AppCompatActivity() {
             }
 
         binding.bottomNavigation.selectedItemId =
-            R.id.nav_admin_publish
+            R.id.nav_admin_dashboard
 
-        showFragment(AdminPublishFragment())
+        showFragment(AdminDashboardFragment())
     }
 
     // CART BADGE

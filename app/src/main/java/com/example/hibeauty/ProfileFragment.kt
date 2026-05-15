@@ -103,6 +103,7 @@ class ProfileFragment : Fragment() {
         firestore.collection("users")
             .document(uid)
             .get()
+
             .addOnSuccessListener { document ->
 
                 val name =
@@ -117,9 +118,22 @@ class ProfileFragment : Fragment() {
                     document.getString("role")
                         ?: "user"
 
+                // DEBUG ROLE
+
+                Toast.makeText(
+                    requireContext(),
+                    "ROL: $role",
+                    Toast.LENGTH_SHORT
+                ).show()
+
                 // ADMIN
 
-                if (role == "admin") {
+                // ADMIN
+
+                if (
+                    role.lowercase() == "admin" ||
+                    role.lowercase() == "administrador"
+                ) {
 
                     parentFragmentManager
                         .beginTransaction()
@@ -134,7 +148,7 @@ class ProfileFragment : Fragment() {
 
                 // DELIVERY
 
-                if (role == "delivery") {
+                if (role.lowercase() == "delivery") {
 
                     Toast.makeText(
                         requireContext(),
@@ -161,6 +175,15 @@ class ProfileFragment : Fragment() {
 
                 binding.profileDiscounts.text =
                     "5"
+            }
+
+            .addOnFailureListener { e ->
+
+                Toast.makeText(
+                    requireContext(),
+                    "Error perfil: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
     }
 
@@ -225,6 +248,7 @@ class ProfileFragment : Fragment() {
                     email,
                     password
                 )
+
                     .addOnSuccessListener {
 
                         Toast.makeText(
@@ -236,12 +260,12 @@ class ProfileFragment : Fragment() {
                         validateSession()
                     }
 
-                    .addOnFailureListener {
+                    .addOnFailureListener { e ->
 
                         Toast.makeText(
                             requireContext(),
-                            "Correo o contraseña incorrectos",
-                            Toast.LENGTH_SHORT
+                            "Error login: ${e.message}",
+                            Toast.LENGTH_LONG
                         ).show()
                     }
             }
@@ -293,10 +317,22 @@ class ProfileFragment : Fragment() {
                     return@setOnClickListener
                 }
 
+                if (password.length < 6) {
+
+                    Toast.makeText(
+                        requireContext(),
+                        "La contraseña debe tener mínimo 6 caracteres",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    return@setOnClickListener
+                }
+
                 auth.createUserWithEmailAndPassword(
                     email,
                     password
                 )
+
                     .addOnSuccessListener { result ->
 
                         val uid =
@@ -335,21 +371,33 @@ class ProfileFragment : Fragment() {
                             .document(uid)
                             .set(userMap)
 
-                        Toast.makeText(
-                            requireContext(),
-                            "Cuenta creada ✨",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            .addOnSuccessListener {
 
-                        validateSession()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Cuenta creada exitosamente ✨",
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                                validateSession()
+                            }
+
+                            .addOnFailureListener { e ->
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Error Firestore: ${e.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                     }
 
-                    .addOnFailureListener {
+                    .addOnFailureListener { e ->
 
                         Toast.makeText(
                             requireContext(),
-                            "No se pudo crear la cuenta",
-                            Toast.LENGTH_SHORT
+                            "Error Auth: ${e.message}",
+                            Toast.LENGTH_LONG
                         ).show()
                     }
             }
