@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 systemBars.left,
                 0,
                 systemBars.right,
-                0
+                systemBars.bottom
             )
 
             insets
@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity() {
     fun showAdminNavigation() {
 
         isAdminMode = true
+        cartListener?.remove() // Explicitly stop cart badge observer in admin mode!
 
         binding.bottomNavigation.menu.clear()
 
@@ -210,13 +211,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.selectedItemId =
             R.id.nav_admin_dashboard
-
-        showFragment(AdminDashboardFragment())
     }
 
     // CART BADGE
 
     private fun observeCartBadge() {
+        if (isAdminMode) return
 
         val currentUser =
             FirebaseAuth.getInstance()
@@ -232,6 +232,13 @@ class MainActivity : AppCompatActivity() {
                 .collection("items")
 
                 .addSnapshotListener { value, _ ->
+                    if (isAdminMode) return@addSnapshotListener
+
+                    // Safety check: ensure that the nav_cart menu item is actually present
+                    val cartMenuItem = binding.bottomNavigation.menu.findItem(R.id.nav_cart)
+                    if (cartMenuItem == null) {
+                        return@addSnapshotListener
+                    }
 
                     val count =
                         value?.documents?.size ?: 0

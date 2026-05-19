@@ -288,13 +288,15 @@
 
                         <TextView
                             android:id="@+id/profileEmail"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="correo@example.com"
                             android:textColor="#FFFFFF"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
 
                         <TextView
                             android:layout_width="140dp"
@@ -303,7 +305,7 @@
                             android:background="@drawable/bg_soft_panel"
                             android:gravity="center"
                             android:text="Beauty VIP"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/hib_pink"
                             android:textSize="15sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -333,7 +335,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="12"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/hib_pink"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -341,8 +343,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Pedidos"
-                            android:textColor="#FFFFFF"
-                            android:textSize="15sp"
+                            android:textColor="@color/hib_ink"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -364,7 +366,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="450"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/hib_pink"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -372,8 +374,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Puntos"
-                            android:textColor="#FFFFFF"
-                            android:textSize="15sp"
+                            android:textColor="@color/hib_ink"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -394,7 +396,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="5"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/hib_pink"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -402,8 +404,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Descuentos"
-                            android:textColor="#FFFFFF"
-                            android:textSize="15sp"
+                            android:textColor="@color/hib_ink"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
