@@ -82,6 +82,8 @@ class AdminDashboardFragment : Fragment() {
 
     private fun loadDashboardData() {
 
+        loadAdminGreeting()
+
         loadProducts()
 
         loadOrders()
@@ -93,6 +95,24 @@ class AdminDashboardFragment : Fragment() {
         loadRecentOrders()
 
         loadTopProducts()
+    }
+
+    private fun loadAdminGreeting() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            firestore.collection("users")
+                .document(currentUser.uid)
+                .get()
+                .addOnSuccessListener { document ->
+                    val name = document.getString("name") ?: "Administrador"
+                    binding.adminWelcomeText.text = "¡Hola, $name!"
+                }
+                .addOnFailureListener {
+                    binding.adminWelcomeText.text = "¡Hola, Administrador!"
+                }
+        } else {
+            binding.adminWelcomeText.text = "¡Hola, Administrador!"
+        }
     }
 
     private fun loadProducts() {
@@ -343,7 +363,7 @@ class AdminDashboardFragment : Fragment() {
             "$${revenue / 1000000.0}M"
 
         layout.findViewById<TextView>(R.id.productRating).text =
-            "⭐ 4.8"
+            "4.8"
 
         binding.containerTopProducts
             .addView(layout)
@@ -399,7 +419,7 @@ class AdminDashboardFragment : Fragment() {
 
                 Toast.makeText(
                     requireContext(),
-                    "Sesión cerrada 👋",
+                    "Sesión cerrada con éxito",
                     Toast.LENGTH_SHORT
                 ).show()
 

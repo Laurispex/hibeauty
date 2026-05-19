@@ -35,14 +35,19 @@ class CategoryProductsFragment(
 
     private fun setupUI() {
 
-        binding.categoryTitle.text =
-            "$category ${getCategoryEmoji()}"
+        binding.categoryTitle.text = category
 
         binding.bannerTitle.text =
             "$category para ti"
 
-        binding.bannerEmoji.text =
-            getCategoryEmoji()
+        val iconRes = when (category) {
+            "Skincare" -> R.drawable.ic_flower
+            "Maquillaje" -> R.drawable.ic_lipstick
+            "Fragancias" -> R.drawable.ic_lotion_bottle
+            "Bienestar" -> R.drawable.ic_leaf
+            else -> R.drawable.ic_crown
+        }
+        binding.bannerIcon.setImageResource(iconRes)
 
         binding.bannerSubtitle.text =
             getBannerSubtitle()
@@ -180,24 +185,6 @@ class CategoryProductsFragment(
 
         binding.productsCountText.text =
             countText
-    }
-
-    // EMOJIS
-
-    private fun getCategoryEmoji(): String {
-
-        return when (category) {
-
-            "Skincare" -> "✨"
-
-            "Maquillaje" -> "💄"
-
-            "Fragancias" -> "🌸"
-
-            "Bienestar" -> "🧘"
-
-            else -> "💖"
-        }
     }
 
     // SUBTITLES

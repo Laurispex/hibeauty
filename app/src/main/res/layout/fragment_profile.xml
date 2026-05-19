@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/hib_page"
@@ -27,7 +28,10 @@
                 android:layout_height="56dp"
                 android:background="@drawable/bg_soft_circle"
                 android:padding="16dp"
-                android:src="@drawable/ic_back" />
+                android:src="@drawable/ic_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Regresar" />
 
             <TextView
                 android:layout_width="0dp"
@@ -57,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¡Hola de nuevo! ✨"
+                android:text="¡Hola de nuevo!"
                 android:textColor="@color/hib_ink"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -106,7 +110,9 @@
                 android:text="Ingresar"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/btnShowRegister"
@@ -114,10 +120,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:gravity="center"
-                android:text="¿No tienes cuenta? Regístrate aquí 💕"
+                android:text="¿No tienes cuenta? Regístrate aquí"
                 android:textColor="@color/hib_pink"
                 android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
 
         <!-- REGISTER CONTAINER -->
@@ -132,7 +140,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Únete a HiBeauty 💖"
+                android:text="Únete a HiBeauty"
                 android:textColor="@color/hib_ink"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -199,7 +207,6 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp" />
 
-
             <TextView
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
@@ -212,7 +219,9 @@
                 android:text="Crear cuenta"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/btnShowLogin"
@@ -220,10 +229,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:gravity="center"
-                android:text="¿Ya tienes cuenta? Inicia sesión ✨"
+                android:text="¿Ya tienes cuenta? Inicia sesión"
                 android:textColor="@color/hib_pink"
                 android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
 
         <!-- USER PANEL (PROFILE) -->
@@ -250,13 +261,14 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="92dp"
                         android:layout_height="92dp"
                         android:background="@drawable/bg_button_white"
-                        android:gravity="center"
-                        android:text="💕"
-                        android:textSize="42sp" />
+                        android:padding="22dp"
+                        android:src="@drawable/ic_simple_person"
+                        app:tint="@color/hib_pink"
+                        android:contentDescription="Avatar del usuario" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -269,7 +281,7 @@
                             android:id="@+id/profileName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Valentina ✨"
+                            android:text="Valentina"
                             android:textColor="#FFFFFF"
                             android:textSize="28sp"
                             android:textStyle="bold" />
@@ -312,7 +324,9 @@
                         android:layout_weight="1"
                         android:background="@drawable/bg_soft_panel"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:id="@+id/profileOrdersCount"
@@ -341,7 +355,9 @@
                         android:layout_weight="1"
                         android:background="@drawable/bg_soft_panel"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:id="@+id/profilePoints"
@@ -369,7 +385,9 @@
                         android:layout_weight="1"
                         android:background="@drawable/bg_soft_panel"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <TextView
                             android:id="@+id/profileDiscounts"
@@ -434,12 +452,14 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
                     android:layout_marginStart="18dp"
-                    android:text="👑"
-                    android:textSize="40sp" />
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_crown"
+                    app:tint="@color/hib_pink"
+                    android:contentDescription="Recompensa de nivel" />
             </LinearLayout>
 
             <!-- ACCOUNT -->
@@ -462,10 +482,15 @@
                 android:elevation="4dp"
                 android:gravity="center_vertical"
                 android:paddingStart="24dp"
-                android:text="💖   Favoritos"
+                android:text="Favoritos"
                 android:textColor="@color/hib_ink"
-                android:textSize="19sp"
-                android:textStyle="bold" />
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:drawableStart="@drawable/ic_nav_heart"
+                android:drawablePadding="16dp"
+                android:drawableTint="@color/hib_pink"
+                android:clickable="true"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/btnAddresses"
@@ -476,10 +501,15 @@
                 android:elevation="4dp"
                 android:gravity="center_vertical"
                 android:paddingStart="24dp"
-                android:text="📍   Direcciones"
+                android:text="Direcciones"
                 android:textColor="@color/hib_ink"
-                android:textSize="19sp"
-                android:textStyle="bold" />
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:drawableStart="@drawable/ic_location_pin"
+                android:drawablePadding="16dp"
+                android:drawableTint="@color/hib_pink"
+                android:clickable="true"
+                android:focusable="true" />
 
             <!-- PREFERENCES -->
             <TextView
@@ -500,10 +530,15 @@
                 android:elevation="4dp"
                 android:gravity="center_vertical"
                 android:paddingStart="24dp"
-                android:text="🔔   Notificaciones"
+                android:text="Notificaciones"
                 android:textColor="@color/hib_ink"
-                android:textSize="19sp"
-                android:textStyle="bold" />
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:drawableStart="@drawable/ic_nav_sparkle"
+                android:drawablePadding="16dp"
+                android:drawableTint="@color/hib_pink"
+                android:clickable="true"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/btnSettings"
@@ -514,10 +549,15 @@
                 android:elevation="4dp"
                 android:gravity="center_vertical"
                 android:paddingStart="24dp"
-                android:text="⚙   Configuración"
+                android:text="Configuración"
                 android:textColor="@color/hib_ink"
-                android:textSize="19sp"
-                android:textStyle="bold" />
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:drawableStart="@drawable/ic_filter"
+                android:drawablePadding="16dp"
+                android:drawableTint="@color/hib_pink"
+                android:clickable="true"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/btnSupport"
@@ -528,10 +568,15 @@
                 android:elevation="4dp"
                 android:gravity="center_vertical"
                 android:paddingStart="24dp"
-                android:text="❓   Ayuda y soporte"
+                android:text="Ayuda y soporte"
                 android:textColor="@color/hib_ink"
-                android:textSize="19sp"
-                android:textStyle="bold" />
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:drawableStart="@drawable/ic_warning"
+                android:drawablePadding="16dp"
+                android:drawableTint="@color/hib_pink"
+                android:clickable="true"
+                android:focusable="true" />
 
             <!-- LOGOUT -->
             <TextView
@@ -543,10 +588,12 @@
                 android:background="@drawable/bg_card_white"
                 android:elevation="4dp"
                 android:gravity="center"
-                android:text="↪   Cerrar sesión"
+                android:text="Cerrar sesión"
                 android:textColor="@color/hib_hot_pink"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

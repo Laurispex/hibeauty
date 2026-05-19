@@ -266,7 +266,7 @@ class RoutineFragment : Fragment() {
             routineSteps.size
 
         binding.progressTitle.text =
-            "$completed de $total completados ✨"
+            "$completed de $total completados"
 
         val progress =
             if (total == 0)
@@ -287,16 +287,16 @@ class RoutineFragment : Fragment() {
             when {
 
                 progress == 100 ->
-                    "¡Rutina completada hermosa! 💖"
+                    "¡Rutina completada con éxito!"
 
                 progress >= 70 ->
-                    "¡Increíble progreso! ✨"
+                    "¡Excelente progreso!"
 
                 progress >= 40 ->
-                    "¡Vas súper bien! 💪"
+                    "¡Vas por muy buen camino!"
 
                 else ->
-                    "Comienza tu glow de hoy ✨"
+                    "Comienza tu rutina diaria"
             }
     }
 

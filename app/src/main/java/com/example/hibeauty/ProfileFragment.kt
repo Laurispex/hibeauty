@@ -145,7 +145,7 @@ class ProfileFragment : Fragment() {
 
                     Toast.makeText(
                         requireContext(),
-                        "Panel delivery próximamente 🚚",
+                        "Panel de repartidor próximamente",
                         Toast.LENGTH_SHORT
                     ).show()
 

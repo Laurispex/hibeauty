@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/hib_page"
@@ -8,90 +8,105 @@
     android:orientation="vertical"
     android:padding="34dp">
 
-    <!-- ICON -->
-
-    <TextView
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+    <!-- TOP ACCESSIBILITY LOGO -->
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:background="@drawable/bg_circle_pink"
-        android:gravity="center"
-        android:text="💖"
-        android:textSize="52sp" />
+        android:padding="26dp"
+        android:src="@drawable/ic_crown"
+        app:tint="@color/hib_pink"
+        android:contentDescription="Acceso VIP" />
 
     <!-- TITLE -->
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="BeautyLover Access ✨"
+        android:layout_marginTop="28dp"
+        android:text="Acceso BeautyLover"
         android:textColor="@color/hib_ink"
-        android:textSize="30sp"
+        android:textSize="28sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif-black" />
 
     <!-- MESSAGE -->
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="14dp"
         android:gravity="center"
-        android:text="Crea tu cuenta para guardar rutinas, seguir tus pedidos, desbloquear beneficios y vivir la experiencia HiBeauty 💕"
+        android:text="Crea tu cuenta para guardar rutinas, seguir tus pedidos, desbloquear beneficios y vivir la experiencia HiBeauty completa."
         android:textColor="@color/hib_muted"
-        android:textSize="17sp"
-        android:textStyle="bold" />
+        android:textSize="15sp" />
 
-    <!-- BENEFITS -->
-
+    <!-- BENEFITS SPECIFICATION CARD -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/bg_card_large"
-        android:elevation="3dp"
+        android:elevation="4dp"
         android:orientation="vertical"
         android:padding="22dp">
 
+        <!-- BENEFIT 1: SAVE ROUTINES -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="✨ Guardar rutinas"
+            android:text="Guardar tus rutinas favoritas"
             android:textColor="@color/hib_ink"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:drawableStart="@drawable/ic_nav_heart"
+            android:drawablePadding="14dp"
+            android:drawableTint="@color/hib_pink"
+            android:gravity="center_vertical" />
 
+        <!-- BENEFIT 2: TRACK ORDERS -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="🛍 Seguir pedidos"
+            android:layout_marginTop="16dp"
+            android:text="Seguir tus pedidos en tiempo real"
             android:textColor="@color/hib_ink"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:drawableStart="@drawable/ic_package"
+            android:drawablePadding="14dp"
+            android:drawableTint="@color/hib_pink"
+            android:gravity="center_vertical" />
 
+        <!-- BENEFIT 3: LOYALTY POINTS -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="💖 Acumular puntos"
+            android:layout_marginTop="16dp"
+            android:text="Acumular puntos y subir de nivel"
             android:textColor="@color/hib_ink"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:drawableStart="@drawable/ic_nav_sparkle"
+            android:drawablePadding="14dp"
+            android:drawableTint="@color/hib_pink"
+            android:gravity="center_vertical" />
 
+        <!-- BENEFIT 4: DISCOUNTS & GIFTS -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="🎁 Desbloquear descuentos"
+            android:layout_marginTop="16dp"
+            android:text="Desbloquear regalos y descuentos"
             android:textColor="@color/hib_ink"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:drawableStart="@drawable/ic_dollar"
+            android:drawablePadding="14dp"
+            android:drawableTint="@color/hib_pink"
+            android:gravity="center_vertical" />
 
     </LinearLayout>
 
-    <!-- BUTTON -->
-
+    <!-- ACTION BUTTON -->
     <TextView
         android:id="@+id/btnOpenLogin"
         android:layout_width="match_parent"
@@ -99,9 +114,10 @@
         android:layout_marginTop="36dp"
         android:background="@drawable/bg_button_pink"
         android:gravity="center"
-        android:text="✨ Crear cuenta"
+        android:text="Registrarse / Iniciar Sesión"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:elevation="2dp" />
 
 </LinearLayout>

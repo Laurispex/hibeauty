@@ -49,10 +49,11 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/adminWelcomeText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Hola Admin 👑"
+                        android:text="¡Hola!"
                         android:textColor="@color/white"
                         android:textSize="28sp"
                         android:textStyle="bold" />

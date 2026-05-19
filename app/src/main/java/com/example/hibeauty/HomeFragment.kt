@@ -64,7 +64,33 @@ class HomeFragment : Fragment() {
 
         setupSearch()
 
+        loadUserGreeting()
+
         loadHomeProducts()
+    }
+
+    private fun loadUserGreeting() {
+        val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val uid = currentUser.uid
+            db.collection("users")
+                .document(uid)
+                .get()
+                .addOnSuccessListener { document ->
+                    val name = document.getString("name")
+                    val greeting = if (!name.isNullOrEmpty()) {
+                        "Hola, $name"
+                    } else {
+                        "Hola hermosa"
+                    }
+                    _binding?.welcomeText?.text = greeting
+                }
+                .addOnFailureListener {
+                    _binding?.welcomeText?.text = "Hola hermosa"
+                }
+        } else {
+            _binding?.welcomeText?.text = "Hola hermosa"
+        }
     }
 
     // RECYCLER VIEW

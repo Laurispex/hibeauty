@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +8,6 @@
     android:orientation="vertical">
 
     <!-- HEADER -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +23,10 @@
             android:layout_height="56dp"
             android:background="@drawable/bg_soft_circle"
             android:padding="16dp"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/ic_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Regresar" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -37,7 +39,7 @@
                 android:id="@+id/categoryTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Skincare ✨"
+                android:text="Categoría"
                 android:textColor="@color/hib_ink"
                 android:textSize="26sp"
                 android:textStyle="bold"
@@ -52,7 +54,6 @@
                 android:textColor="@color/hib_muted"
                 android:textSize="15sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
         <ImageView
@@ -60,12 +61,13 @@
             android:layout_height="56dp"
             android:background="@drawable/bg_soft_circle"
             android:padding="16dp"
-            android:src="@drawable/ic_filter" />
-
+            android:src="@drawable/ic_filter"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Filtrar" />
     </LinearLayout>
 
     <!-- TABS -->
-
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,7 +90,9 @@
                 android:text="Todo"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/tabFeatured"
@@ -100,7 +104,9 @@
                 android:text="Bestsellers"
                 android:textColor="@color/hib_ink"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/tabNew"
@@ -112,7 +118,9 @@
                 android:text="Nuevos"
                 android:textColor="@color/hib_ink"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/tabOffers"
@@ -124,14 +132,13 @@
                 android:text="Ofertas"
                 android:textColor="@color/hib_ink"
                 android:textSize="16sp"
-                android:textStyle="bold" />
-
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
-
     </HorizontalScrollView>
 
     <!-- BANNER -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="220dp"
@@ -144,12 +151,13 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <TextView
-            android:id="@+id/bannerEmoji"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="✨"
-            android:textSize="54sp" />
+        <ImageView
+            android:id="@+id/bannerIcon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_flower"
+            app:tint="#FFFFFF"
+            android:contentDescription="Icono de categoría" />
 
         <TextView
             android:id="@+id/bannerTitle"
@@ -158,7 +166,7 @@
             android:layout_marginTop="12dp"
             android:text="Skincare para ti"
             android:textColor="#FFFFFF"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-black" />
 
@@ -170,13 +178,10 @@
             android:text="Productos seleccionados con amor para tu piel"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
+            android:textSize="15sp" />
     </LinearLayout>
 
     <!-- PRODUCTS HEADER -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -201,13 +206,11 @@
             android:layout_height="wrap_content"
             android:text="Ordenar por ▼"
             android:textColor="@color/hib_hot_pink"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <!-- PRODUCTS -->
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoryRecyclerView"
         android:layout_width="match_parent"

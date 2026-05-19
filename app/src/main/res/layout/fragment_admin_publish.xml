@@ -205,21 +205,6 @@
                 android:textStyle="bold"
                 android:clickable="true"
                 android:focusable="true" />
-
-            <!-- READ-ONLY RESULT URL -->
-            <EditText
-                android:id="@+id/productImageUrl"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_search"
-                android:hint="Enlace generado por Cloudinary"
-                android:inputType="textUri"
-                android:enabled="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/hib_muted"
-                android:textSize="13sp" />
         </LinearLayout>
 
         <!-- CARD 3: CONFIGURACIÓN DESTACADA -->

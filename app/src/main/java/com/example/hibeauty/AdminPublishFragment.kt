@@ -39,6 +39,9 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
     // Dynamic list to store presentations configured by the administrator
     private val presentationList = mutableListOf<PresentationItem>()
 
+    // Secure memory storage for the uploaded Cloudinary secure link
+    private var uploadedImageUrl: String = ""
+
     // ==========================================
     // ☁️ CONFIGURACIÓN DE CLOUDINARY
     // ==========================================
@@ -121,7 +124,7 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         val chipView = inflater.inflate(R.layout.item_presentation_chip, binding.containerPresentations, false)
 
         chipView.findViewById<TextView>(R.id.txtPresName).text = newItem.name
-        chipView.findViewById<TextView>(R.id.txtPresPrice).text = newItem.price.toCOP() // Leveraging our new COP formatter!
+        chipView.findViewById<TextView>(R.id.txtPresPrice).text = newItem.price.toCOP() // Leveraging our COP formatter!
         chipView.findViewById<TextView>(R.id.txtPresStock).text = "${newItem.stock} uds"
 
         // Handle delete presentation action
@@ -179,7 +182,7 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
                     val secureUrl = json.getString("secure_url") // Retrieve the final Cloud HTTPS URL
 
                     activity?.runOnUiThread {
-                        binding.productImageUrl.setText(secureUrl)
+                        uploadedImageUrl = secureUrl
                         binding.uploadProgressLayout.visibility = View.GONE
                         binding.btnPublishProduct.isEnabled = true
                         binding.btnSelectImage.isEnabled = true
@@ -239,7 +242,7 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
 
         val name = binding.productName.text.toString().trim()
         val description = binding.productDescription.text.toString().trim()
-        val imageUrl = binding.productImageUrl.text.toString().trim()
+        val imageUrl = uploadedImageUrl
         val benefits = binding.productBenefits.text.toString().trim()
         val howToUse = binding.productHowToUse.text.toString().trim()
         val category = getSelectedCategory()
@@ -318,7 +321,6 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
     private fun clearForm() {
         binding.productName.text?.clear()
         binding.productDescription.text?.clear()
-        binding.productImageUrl.text?.clear()
         binding.productBenefits.text?.clear()
         binding.productHowToUse.text?.clear()
 
@@ -333,6 +335,9 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         // Clear dynamic presentations list state and layout views
         presentationList.clear()
         binding.containerPresentations.removeAllViews()
+
+        // Clear local memory image URL state
+        uploadedImageUrl = ""
 
         loadImagePreview("")
     }

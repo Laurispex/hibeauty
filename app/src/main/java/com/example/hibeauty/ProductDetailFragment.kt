@@ -189,7 +189,7 @@ class ProductDetailFragment(
             binding.detailOldPrice.visibility = View.VISIBLE
 
             binding.detailOldPrice.text =
-                formatPrice(product.oldPrice)
+                product.oldPrice.toCOP()
 
             binding.detailOldPrice.paintFlags =
                 binding.detailOldPrice.paintFlags or
