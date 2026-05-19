@@ -13,13 +13,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="175dp"
             android:background="@drawable/bg_product_image"
-            android:gravity="center"
-            android:text="💖"
-            android:textSize="48sp" />
+            android:padding="44dp"
+            android:src="@drawable/ic_leaf"
+            android:tint="@color/hib_pink"
+            android:contentDescription="Mascarilla" />
 
         <TextView
             android:layout_width="wrap_content"

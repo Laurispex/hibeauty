@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Primary User (Front) -->
+    <!-- Head -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M9,10a4,4 0 1,0 0,-8a4,4 0 1,0 0,8z"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Shoulders -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M2,20c0,-3.3 2.7,-6 6,-6h2c3.3,0 6,2.7 6,6"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Secondary User (Back/Right Offset) -->
+    <!-- Head -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M17,10a3,3 0 1,0 0,-6"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Shoulders -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M16,14.5c1.8,0.5 3,2.2 3,3.5"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+</vector>

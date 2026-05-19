@@ -8,13 +8,13 @@
     android:orientation="horizontal"
     android:padding="22dp">
 
-    <TextView
+    <ImageView
         android:layout_width="74dp"
         android:layout_height="74dp"
         android:background="@drawable/bg_product_image"
-        android:gravity="center"
-        android:text="💄"
-        android:textSize="34sp" />
+        android:padding="18dp"
+        android:src="@drawable/ic_lipstick"
+        android:contentDescription="Makeup" />
 
     <LinearLayout
         android:layout_width="0dp"

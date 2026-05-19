@@ -239,4 +239,18 @@
 
     </LinearLayout>
 
+    <!-- FLOATING BACK BUTTON -->
+    <ImageView
+        android:id="@+id/btnBackDetail"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_soft_circle"
+        android:elevation="12dp"
+        android:padding="16dp"
+        android:src="@drawable/ic_back"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="Regresar" />
+
 </FrameLayout>

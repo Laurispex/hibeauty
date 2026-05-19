@@ -8,13 +8,14 @@
     android:orientation="horizontal"
     android:padding="18dp">
 
-    <TextView
+    <ImageView
         android:layout_width="74dp"
         android:layout_height="74dp"
         android:background="@drawable/bg_product_image"
-        android:gravity="center"
-        android:text="💖"
-        android:textSize="32sp" />
+        android:padding="18dp"
+        android:src="@drawable/ic_nav_sparkle"
+        android:tint="@color/hib_violet"
+        android:contentDescription="Mascarilla" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -49,9 +50,12 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🗑"
-        android:textSize="22sp" />
+    <ImageView
+        android:id="@+id/btnRemoveCartItem"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_trash"
+        android:tint="@color/hib_pink"
+        android:contentDescription="Eliminar" />
 </LinearLayout>

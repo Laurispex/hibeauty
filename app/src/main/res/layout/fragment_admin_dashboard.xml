@@ -100,13 +100,14 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
                         android:background="@drawable/bg_green_circle"
-                        android:gravity="center"
-                        android:text="💲"
-                        android:textSize="18sp" />
+                        android:padding="8dp"
+                        android:src="@drawable/ic_dollar"
+                        android:tint="@color/white"
+                        android:contentDescription="Ventas" />
 
                     <TextView
                         android:id="@+id/adminSales"
@@ -149,13 +150,14 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
                         android:background="@drawable/bg_pink_circle"
-                        android:gravity="center"
-                        android:text="🛍"
-                        android:textSize="18sp" />
+                        android:padding="8dp"
+                        android:src="@drawable/ic_nav_bag"
+                        android:tint="@color/white"
+                        android:contentDescription="Pedidos" />
 
                     <TextView
                         android:id="@+id/adminOrdersCount"
@@ -198,13 +200,14 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
                         android:background="@drawable/bg_purple_circle"
-                        android:gravity="center"
-                        android:text="👥"
-                        android:textSize="18sp" />
+                        android:padding="8dp"
+                        android:src="@drawable/ic_users"
+                        android:tint="@color/white"
+                        android:contentDescription="Clientes" />
 
                     <TextView
                         android:id="@+id/adminUsersCount"
@@ -247,13 +250,14 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="38dp"
                         android:layout_height="38dp"
                         android:background="@drawable/bg_blue_circle"
-                        android:gravity="center"
-                        android:text="📦"
-                        android:textSize="18sp" />
+                        android:padding="8dp"
+                        android:src="@drawable/ic_package"
+                        android:tint="@color/white"
+                        android:contentDescription="Productos" />
 
                     <TextView
                         android:id="@+id/adminProductsCount"
@@ -301,14 +305,15 @@
             android:padding="16dp"
             android:visibility="gone">
 
-            <TextView
+            <ImageView
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:background="@drawable/bg_soft_circle"
                 android:backgroundTint="#33FF9800"
-                android:gravity="center"
-                android:text="⚠"
-                android:textSize="16sp" />
+                android:padding="8dp"
+                android:src="@drawable/ic_warning"
+                android:tint="#E65100"
+                android:contentDescription="Alerta" />
 
             <TextView
                 android:id="@+id/adminLowStockText"
@@ -392,62 +397,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="Pedidos"
-                    android:textColor="@color/hib_ink"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- CLIENTS -->
-
-            <LinearLayout
-                android:id="@+id/btnClients"
-                android:layout_width="0dp"
-                android:layout_height="104dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="6dp"
-                android:background="@drawable/bg_card_white"
-                android:elevation="2dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_nav_person"
-                    app:tint="@color/hib_ink" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Clientes"
-                    android:textColor="@color/hib_ink"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- REPORTS -->
-
-            <LinearLayout
-                android:id="@+id/btnReports"
-                android:layout_width="0dp"
-                android:layout_height="104dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="6dp"
-                android:background="@drawable/bg_card_white"
-                android:elevation="2dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_nav_sparkle"
-                    app:tint="@color/hib_ink" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Reportes"
                     android:textColor="@color/hib_ink"
                     android:textStyle="bold" />
             </LinearLayout>

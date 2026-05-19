@@ -42,6 +42,10 @@ class ProductDetailFragment(
         binding.btnAddToCart.setOnClickListener {
             addToCart()
         }
+
+        binding.btnBackDetail.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun setupProduct() {

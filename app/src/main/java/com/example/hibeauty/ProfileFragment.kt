@@ -135,14 +135,7 @@ class ProfileFragment : Fragment() {
                     role.lowercase() == "administrador"
                 ) {
 
-                    parentFragmentManager
-                        .beginTransaction()
-                        .replace(
-                            R.id.fragment_container,
-                            AdminDashboardFragment()
-                        )
-                        .commit()
-
+                    (requireActivity() as? MainActivity)?.showAdminNavigation()
                     return@addOnSuccessListener
                 }
 
@@ -338,17 +331,7 @@ class ProfileFragment : Fragment() {
                         val uid =
                             result.user?.uid ?: ""
 
-                        val selectedRole = when {
-
-                            binding.roleAdmin.isChecked ->
-                                "admin"
-
-                            binding.roleDelivery.isChecked ->
-                                "delivery"
-
-                            else ->
-                                "user"
-                        }
+                        val selectedRole = "user"
 
                         val userMap =
                             hashMapOf(
@@ -417,11 +400,14 @@ class ProfileFragment : Fragment() {
         binding.btnOrders
             .setOnClickListener {
 
-                Toast.makeText(
-                    requireContext(),
-                    "Próximamente podrás ver tus pedidos 💕",
-                    Toast.LENGTH_SHORT
-                ).show()
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        UserOrdersFragment()
+                    )
+                    .addToBackStack(null)
+                    .commit()
             }
 
         // FAVORITES

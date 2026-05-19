@@ -89,11 +89,10 @@
                     android:orientation="horizontal"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🌸"
-                        android:textSize="30sp" />
+                    <ImageView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:src="@drawable/ic_flower" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -134,11 +133,11 @@
                     android:orientation="horizontal"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="✨"
-                        android:textSize="30sp" />
+                    <ImageView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:src="@drawable/ic_nav_sparkle"
+                        android:tint="@color/white" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -196,19 +195,14 @@
             android:orientation="horizontal"
             android:padding="18dp">
 
-            <LinearLayout
+            <ImageView
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:background="@drawable/bg_button_pink"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="✨"
-                    android:textSize="34sp" />
-
-            </LinearLayout>
+                android:padding="20dp"
+                android:src="@drawable/ic_nav_sparkle"
+                android:tint="@color/white"
+                android:contentDescription="Desafío" />
 
             <LinearLayout
                 android:layout_width="0dp"

@@ -382,23 +382,7 @@ class AdminDashboardFragment : Fragment() {
                 .commit()
         }
 
-        binding.btnClients.setOnClickListener {
 
-            Toast.makeText(
-                requireContext(),
-                "Clientes próximamente",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        binding.btnReports.setOnClickListener {
-
-            Toast.makeText(
-                requireContext(),
-                "Reportes próximamente",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
 
         binding.btnViewAllOrders.setOnClickListener {
 
@@ -426,13 +410,9 @@ class AdminDashboardFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(
-                        R.id.fragment_container,
-                        HomeFragment()
-                    )
-                    .commit()
+                val mainActivity = requireActivity() as? MainActivity
+                mainActivity?.showUserNavigation()
+                mainActivity?.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottom_navigation)?.selectedItemId = R.id.nav_home
             }
     }
 

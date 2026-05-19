@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Crown Outline -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M2,4l3,12h14l3,-12l-5,4l-4,-6l-4,6z"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Crown Base Line -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M3,19h18"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Crown Jewels / Dots -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,19m-1,0a1,1 0 1,1 2,0a1,1 0 1,1 -2,0"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.5" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M7,19m-1,0a1,1 0 1,1 2,0a1,1 0 1,1 -2,0"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.5" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M17,19m-1,0a1,1 0 1,1 2,0a1,1 0 1,1 -2,0"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.5" />
+
+</vector>

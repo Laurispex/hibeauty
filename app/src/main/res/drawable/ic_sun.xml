@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Sun Core -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,12m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Rays -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,3V1M12,23v-2M3,12H1M23,12h-2M5.64,5.64L4.22,4.22M19.78,19.78l-1.41,-1.41M5.64,18.36l-1.41,1.41M19.78,4.22l-1.41,1.41"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+</vector>

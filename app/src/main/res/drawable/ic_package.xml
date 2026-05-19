@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Isometric Box Outline -->
+    <!-- Top Face -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,2L21,6.5L12,11L3,6.5Z"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Left & Right Bottom faces (Isometric sides) -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M3,6.5V17.5L12,22V11Z"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M21,6.5V17.5L12,22"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Tape or Label Detail -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,11v6"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M7.5,8.75l4.5,2.25l4.5,-2.25"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+</vector>

@@ -122,13 +122,14 @@
             android:orientation="horizontal"
             android:padding="18dp">
 
-            <TextView
+            <ImageView
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:background="@drawable/bg_circle_pink"
-                android:gravity="center"
-                android:text="💡"
-                android:textSize="28sp" />
+                android:padding="16dp"
+                android:src="@drawable/ic_lightbulb"
+                android:tint="@color/white"
+                android:contentDescription="Tip" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -167,13 +168,14 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
                 android:layout_width="58dp"
                 android:layout_height="58dp"
                 android:background="@drawable/bg_button_pink"
-                android:gravity="center"
-                android:text="☀️"
-                android:textSize="28sp" />
+                android:padding="15dp"
+                android:src="@drawable/ic_sun"
+                android:tint="@color/white"
+                android:contentDescription="Sol" />
 
             <TextView
                 android:layout_width="wrap_content"

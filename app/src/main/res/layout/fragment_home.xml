@@ -132,30 +132,23 @@
 
         <!-- QUICK ACTIONS -->
 
-        <HorizontalScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="86dp"
             android:layout_marginTop="22dp"
-            android:scrollbars="none">
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp">
+            <include
+                android:id="@+id/quickRoutineCard"
+                layout="@layout/item_quick_routine" />
 
-                <include
-                    android:id="@+id/quickRoutineCard"
-                    layout="@layout/item_quick_routine" />
+            <include
+                android:id="@+id/quickOrdersCard"
+                layout="@layout/item_quick_orders" />
 
-                <include
-                    android:id="@+id/quickOrdersCard"
-                    layout="@layout/item_quick_orders" />
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
+        </LinearLayout>
 
         <!-- TITLE -->
 

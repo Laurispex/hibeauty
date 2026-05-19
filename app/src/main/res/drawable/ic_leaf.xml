@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Stem -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M2,22c6,-3 11,-8 13,-13"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Main Leaf -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M15,9c0,-4.5 -3,-7.5 -7.5,-7.5c0,4.5 3,7.5 7.5,7.5z"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Vein for Main Leaf -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M7.5,1.5c1.5,1.5 3,3.5 4.5,5.5"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Side Leaf (Smaller) -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12.5,11.5c4,0.5 7.5,-1.5 8,-5.5c-4,-0.5 -7.5,1.5 -8,5.5z"
+        android:strokeColor="@color/hib_ink"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Vein for Side Leaf -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M16.5,8.5c1,0.5 2,1.5 2.5,2.5"
+        android:strokeColor="@color/hib_pink"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+</vector>
