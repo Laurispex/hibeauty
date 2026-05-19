@@ -102,6 +102,12 @@ class ProfileFragment : Fragment() {
         val uid =
             currentUser.uid
 
+        binding.profileName.text = "Cargando..."
+        binding.profileEmail.text = "Cargando..."
+        binding.profileOrdersCount.text = "-"
+        binding.profilePoints.text = "-"
+        binding.profileDiscounts.text = "-"
+
         firestore.collection("users")
             .document(uid)
             .get()
@@ -134,7 +140,8 @@ class ProfileFragment : Fragment() {
 
                 if (
                     role.lowercase() == "admin" ||
-                    role.lowercase() == "administrador"
+                    role.lowercase() == "administrador" ||
+                    role.lowercase() == "tienda"
                 ) {
 
                     (requireActivity() as? MainActivity)?.showAdminNavigation()
@@ -166,14 +173,13 @@ class ProfileFragment : Fragment() {
                 binding.profileEmail.text =
                     email
 
-                binding.profileOrdersCount.text =
-                    "12"
+                val ordersCount = document.getLong("ordersCount") ?: 0L
+                val points = document.getLong("points") ?: 0L
+                val discounts = document.getLong("discounts") ?: 0L
 
-                binding.profilePoints.text =
-                    "450"
-
-                binding.profileDiscounts.text =
-                    "5"
+                binding.profileOrdersCount.text = ordersCount.toString()
+                binding.profilePoints.text = points.toString()
+                binding.profileDiscounts.text = discounts.toString()
             }
 
             .addOnFailureListener { e ->
@@ -354,7 +360,7 @@ class ProfileFragment : Fragment() {
 
                 val selectedRole = when {
                     isDelivery -> "delivery"
-                    email.contains("admin", ignoreCase = true) -> "admin"
+                    email.contains("admin", ignoreCase = true) || email.contains("tienda", ignoreCase = true) -> "tienda"
                     else -> "user"
                 }
 
@@ -365,6 +371,9 @@ class ProfileFragment : Fragment() {
                     "identification" to identification,
                     "role" to selectedRole,
                     "address" to "Calle 85 # 11-53, Bogotá", // Premium default delivery address
+                    "ordersCount" to 0L,
+                    "points" to 0L,
+                    "discounts" to 0L,
                     "createdAt" to System.currentTimeMillis()
                 )
 

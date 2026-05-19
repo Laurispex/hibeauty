@@ -60,12 +60,21 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         }
     }
 
+    private var productIdToEdit: String? = null
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAdminPublishBinding.bind(view)
+
+        productIdToEdit = arguments?.getString("product_id")
+
+        if (productIdToEdit != null) {
+            binding.btnPublishProduct.text = "Guardar cambios"
+            loadProductData(productIdToEdit!!)
+        }
 
         // Setup Back Button
         binding.btnBackPublish.setOnClickListener {
@@ -143,6 +152,55 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         binding.inputPresetName.requestFocus()
     }
 
+    private fun loadProductData(productId: String) {
+        db.collection("products").document(productId).get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                binding.productName.setText(document.getString("name"))
+                binding.productDescription.setText(document.getString("description"))
+                binding.productBenefits.setText(document.getString("benefits"))
+                binding.productHowToUse.setText(document.getString("howToUse"))
+                
+                binding.checkFeatured.isChecked = document.getBoolean("isFeatured") ?: false
+                binding.checkNew.isChecked = document.getBoolean("isNew") ?: false
+                binding.checkOffer.isChecked = document.getBoolean("isOffer") ?: false
+                
+                when (document.getString("category")) {
+                    "Maquillaje" -> binding.productCategoryGroup.check(R.id.categoryMakeup)
+                    "Fragancias" -> binding.productCategoryGroup.check(R.id.categoryFragrance)
+                    "Bienestar" -> binding.productCategoryGroup.check(R.id.categoryWellness)
+                    else -> binding.productCategoryGroup.check(R.id.categorySkincare)
+                }
+
+                uploadedImageUrl = document.getString("imageUrl") ?: ""
+                loadImagePreview(uploadedImageUrl)
+
+                presentationList.clear()
+                binding.containerPresentations.removeAllViews()
+                val presMap = document.get("presentations") as? Map<String, Map<String, Any>>
+                presMap?.forEach { (name, pres) ->
+                    val price = (pres["price"] as? Number)?.toLong() ?: 0L
+                    val stock = (pres["stock"] as? Number)?.toLong() ?: 0L
+                    val newItem = PresentationItem(name, price, stock)
+                    presentationList.add(newItem)
+                    
+                    val inflater = LayoutInflater.from(requireContext())
+                    val chipView = inflater.inflate(R.layout.item_presentation_chip, binding.containerPresentations, false)
+                    chipView.findViewById<TextView>(R.id.txtPresName).text = newItem.name
+                    chipView.findViewById<TextView>(R.id.txtPresPrice).text = newItem.price.toCOP()
+                    chipView.findViewById<TextView>(R.id.txtPresStock).text = "${newItem.stock} uds"
+                    chipView.findViewById<ImageView>(R.id.btnDeletePres).setOnClickListener {
+                        presentationList.remove(newItem)
+                        binding.containerPresentations.removeView(chipView)
+                        toast("Presentación eliminada")
+                    }
+                    binding.containerPresentations.addView(chipView)
+                }
+            }
+        }.addOnFailureListener {
+            toast("Error cargando producto")
+        }
+    }
+
     private fun uploadImageToCloudinary(uri: Uri) {
         // Show loading layouts and disable interactions
         binding.uploadProgressLayout.visibility = View.VISIBLE
@@ -156,23 +214,29 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
                 val bytes = inputStream?.readBytes() ?: ByteArray(0)
                 inputStream?.close()
 
-                val base64Image = Base64.encodeToString(bytes, Base64.NO_WRAP)
-                val dataUrl = "data:image/jpeg;base64,$base64Image"
-
                 // 2. Setup POST request to Cloudinary Unsigned Upload API
                 val url = URL("https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/image/upload")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.doOutput = true
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                val boundary = "Boundary-" + System.currentTimeMillis()
+                conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
 
-                // Parameters: file (Base64 dataUrl) and upload_preset
-                val postData = "file=" + URLEncoder.encode(dataUrl, "UTF-8") +
-                        "&upload_preset=" + URLEncoder.encode(CLOUDINARY_UPLOAD_PRESET, "UTF-8")
-
-                conn.outputStream.use { os ->
-                    os.write(postData.toByteArray(Charsets.UTF_8))
-                }
+                val dos = java.io.DataOutputStream(conn.outputStream)
+                
+                dos.writeBytes("--$boundary\r\n")
+                dos.writeBytes("Content-Disposition: form-data; name=\"upload_preset\"\r\n\r\n")
+                dos.writeBytes(CLOUDINARY_UPLOAD_PRESET + "\r\n")
+                
+                dos.writeBytes("--$boundary\r\n")
+                dos.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n")
+                dos.writeBytes("Content-Type: image/jpeg\r\n\r\n")
+                dos.write(bytes)
+                dos.writeBytes("\r\n")
+                
+                dos.writeBytes("--$boundary--\r\n")
+                dos.flush()
+                dos.close()
 
                 // 3. Process the Response
                 val responseCode = conn.responseCode
@@ -225,18 +289,17 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
 
     override fun onResume() {
         super.onResume()
-        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.GONE
+        // Removed hiding bottom navigation to keep admin navbar visible
     }
 
     override fun onPause() {
         super.onPause()
-        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.VISIBLE
     }
 
     private fun publishProduct() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
-            toast("Inicia sesión como administrador")
+            toast("Inicia sesión como tienda")
             return
         }
 
@@ -262,9 +325,9 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
         }
 
         binding.btnPublishProduct.isEnabled = false
-        binding.btnPublishProduct.text = "Publicando..."
+        binding.btnPublishProduct.text = if (productIdToEdit != null) "Guardando..." else "Publicando..."
 
-        val productId = db.collection("products").document().id
+        val productId = productIdToEdit ?: db.collection("products").document().id
 
         // Build Firestore presentations map dynamically from the user-added dynamic list
         val presentationsMap = hashMapOf<String, Any>()
@@ -297,15 +360,19 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
             .document(productId)
             .set(productMap)
             .addOnSuccessListener {
-                toast("Producto publicado ✨")
-                clearForm()
-                binding.btnPublishProduct.isEnabled = true
-                binding.btnPublishProduct.text = "Publicar producto"
+                toast(if (productIdToEdit != null) "Cambios guardados ✨" else "Producto publicado ✨")
+                if (productIdToEdit != null) {
+                    parentFragmentManager.popBackStack()
+                } else {
+                    clearForm()
+                    binding.btnPublishProduct.isEnabled = true
+                    binding.btnPublishProduct.text = "Publicar producto"
+                }
             }
             .addOnFailureListener {
-                toast("Error publicando producto")
+                toast("Error guardando producto")
                 binding.btnPublishProduct.isEnabled = true
-                binding.btnPublishProduct.text = "Publicar producto"
+                binding.btnPublishProduct.text = if (productIdToEdit != null) "Guardar cambios" else "Publicar producto"
             }
     }
 

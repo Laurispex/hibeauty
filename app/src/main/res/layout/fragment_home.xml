@@ -22,10 +22,13 @@
 
             <!-- PROFILE -->
             <FrameLayout
+                android:id="@+id/btnProfileHeader"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="top|end"
                 android:background="@drawable/bg_search"
+                android:clickable="true"
+                android:focusable="true"
                 android:elevation="8dp">
 
                 <ImageView
@@ -57,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:maxLines="1"
-                    android:text="Hola hermosa"
+                    android:text="Bienvenida"
                     android:textColor="#9B124D"
                     android:textSize="32sp"
                     android:textStyle="bold"

@@ -67,6 +67,14 @@ class HomeFragment : Fragment() {
         loadUserGreeting()
 
         loadHomeProducts()
+
+        setupProfileHeader()
+    }
+
+    private fun setupProfileHeader() {
+        binding.btnProfileHeader.setOnClickListener {
+            (activity as? MainActivity)?.openProfile()
+        }
     }
 
     private fun loadUserGreeting() {
@@ -81,15 +89,15 @@ class HomeFragment : Fragment() {
                     val greeting = if (!name.isNullOrEmpty()) {
                         "Hola, $name"
                     } else {
-                        "Hola hermosa"
+                        "Descubre tu rutina ideal"
                     }
                     _binding?.welcomeText?.text = greeting
                 }
                 .addOnFailureListener {
-                    _binding?.welcomeText?.text = "Hola hermosa"
+                    _binding?.welcomeText?.text = "Descubre tu rutina ideal"
                 }
         } else {
-            _binding?.welcomeText?.text = "Hola hermosa"
+            _binding?.welcomeText?.text = "Descubre tu rutina ideal"
         }
     }
 

@@ -116,11 +116,7 @@ class MainActivity : AppCompatActivity() {
                         true
                     }
 
-                    R.id.nav_discover -> {
 
-                        showFragment(DiscoverFragment())
-                        true
-                    }
 
                     R.id.nav_cart -> {
 

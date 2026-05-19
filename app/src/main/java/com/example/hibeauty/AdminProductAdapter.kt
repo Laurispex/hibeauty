@@ -9,7 +9,9 @@ import com.bumptech.glide.Glide
 import com.example.hibeauty.databinding.ItemAdminProductBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
-class AdminProductAdapter :
+class AdminProductAdapter(
+    private val onEditProduct: (Product) -> Unit
+) :
     RecyclerView.Adapter<AdminProductAdapter.AdminProductViewHolder>() {
 
     private val products =
@@ -129,12 +131,7 @@ class AdminProductAdapter :
             // EDIT BUTTON
 
             binding.btnEditProduct.setOnClickListener {
-
-                Toast.makeText(
-                    binding.root.context,
-                    "Próximamente podrás editar este producto ✨",
-                    Toast.LENGTH_LONG
-                ).show()
+                onEditProduct(product)
             }
         }
 

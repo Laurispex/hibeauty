@@ -23,7 +23,19 @@ class AdminInventoryFragment : Fragment() {
     }
 
     private val productAdapter =
-        AdminProductAdapter()
+        AdminProductAdapter { product ->
+            val bundle = Bundle().apply {
+                putString("product_id", product.id)
+            }
+            val fragment = AdminPublishFragment().apply {
+                arguments = bundle
+            }
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,24 +95,7 @@ class AdminInventoryFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-        activity
-            ?.findViewById<BottomNavigationView>(
-                R.id.bottom_navigation
-            )
-            ?.visibility = View.GONE
-
         loadInventory()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        activity
-            ?.findViewById<BottomNavigationView>(
-                R.id.bottom_navigation
-            )
-            ?.visibility = View.VISIBLE
     }
 
     private fun loadInventory() {
