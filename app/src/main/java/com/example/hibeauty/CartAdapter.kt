@@ -42,7 +42,7 @@ class CartAdapter(
             binding.cartProductName.text = item.name
             binding.cartProductPresentation.text = "Presentación: ${item.presentation}"
             binding.cartProductQuantity.text = "Cantidad: ${item.quantity}"
-            binding.cartProductPrice.text = "$${item.price * item.quantity}"
+            binding.cartProductPrice.text = (item.price * item.quantity).toCOP()
 
             Glide.with(binding.cartProductImage.context)
                 .load(item.imageUrl)

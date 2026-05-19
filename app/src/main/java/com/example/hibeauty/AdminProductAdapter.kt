@@ -83,7 +83,7 @@ class AdminProductAdapter :
                     "\n"
                 ) { entry ->
 
-                    "${entry.key}: ${entry.value.stock} uds - $${entry.value.price}"
+                    "${entry.key}: ${entry.value.stock} uds - ${entry.value.price.toCOP()}"
                 }.ifBlank {
 
                     "Sin presentaciones"

@@ -60,9 +60,9 @@ class CartFragment : Fragment() {
             binding.cartEmptyText.isVisible = true
             binding.cartEmptyText.text = "Inicia sesión para ver tu carrito."
             binding.cartRecyclerView.isVisible = false
-            binding.cartSubtotal.text = "$0"
-            binding.cartShipping.text = "$0"
-            binding.cartTotal.text = "$0"
+            binding.cartSubtotal.text = 0.toCOP()
+            binding.cartShipping.text = 0.toCOP()
+            binding.cartTotal.text = 0.toCOP()
             binding.btnCheckout.isEnabled = false
             return
         }
@@ -94,9 +94,9 @@ class CartFragment : Fragment() {
                     binding.cartEmptyText.isVisible = true
                     binding.cartEmptyText.text = "Tu carrito está vacío."
                     binding.cartRecyclerView.isVisible = false
-                    binding.cartSubtotal.text = "$0"
-                    binding.cartShipping.text = "$0"
-                    binding.cartTotal.text = "$0"
+                    binding.cartSubtotal.text = 0.toCOP()
+                    binding.cartShipping.text = 0.toCOP()
+                    binding.cartTotal.text = 0.toCOP()
                     binding.btnCheckout.isEnabled = false
                     return@addOnSuccessListener
                 }
@@ -119,9 +119,9 @@ class CartFragment : Fragment() {
         val subtotal = cartItems.sumOf { it.price * it.quantity }
         val shipping = if (cartItems.isEmpty()) 0L else 8000L
         val total = subtotal + shipping
-        binding.cartSubtotal.text = "$$subtotal"
-        binding.cartShipping.text = "$$shipping"
-        binding.cartTotal.text = "$$total"
+        binding.cartSubtotal.text = subtotal.toCOP()
+        binding.cartShipping.text = shipping.toCOP()
+        binding.cartTotal.text = total.toCOP()
     }
 
     private fun removeCartItem(item: CartItem) {

@@ -48,7 +48,7 @@ class OrderAdapter(
             }.ifBlank {
                 "Sin productos registrados"
             }
-            binding.orderTotal.text = "Total: $${order.total}"
+            binding.orderTotal.text = "Total: ${order.total.toCOP()}"
             binding.orderProgress.text = progressText(order.status)
             binding.orderTimeline.text = timelineText(order.status)
 

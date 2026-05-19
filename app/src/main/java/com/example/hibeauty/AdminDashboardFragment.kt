@@ -137,15 +137,8 @@ class AdminDashboardFragment : Fragment() {
                             ?: 0L
                 }
 
-                val formatted =
-                    NumberFormat
-                        .getCurrencyInstance(
-                            Locale("es", "CO")
-                        )
-                        .format(totalSales)
-
                 binding.adminSales.text =
-                    formatted
+                    totalSales.toCOP()
 
                 binding.adminSalesGrowth.text =
                     "+12%"

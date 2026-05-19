@@ -116,7 +116,7 @@ class ProductDetailFragment(
 
         if (firstAvailable == null) {
 
-            binding.detailPrice.text = "$0"
+            binding.detailPrice.text = 0.toCOP()
 
             binding.detailStock.text =
                 "Sin stock disponible"
@@ -163,7 +163,7 @@ class ProductDetailFragment(
 
         if (presentation == null) {
 
-            binding.detailPrice.text = "$0"
+            binding.detailPrice.text = 0.toCOP()
 
             binding.detailStock.text =
                 "No disponible"
@@ -177,7 +177,7 @@ class ProductDetailFragment(
         }
 
         binding.detailPrice.text =
-            formatPrice(presentation.price)
+            presentation.price.toCOP()
 
         binding.detailStock.text =
             "Stock disponible: ${presentation.stock}"
@@ -272,15 +272,7 @@ class ProductDetailFragment(
             }
     }
 
-    private fun formatPrice(price: Long): String {
 
-        val format =
-            NumberFormat.getNumberInstance(
-                Locale("es", "CO")
-            )
-
-        return "$${format.format(price)}"
-    }
 
     private fun toast(message: String) {
 

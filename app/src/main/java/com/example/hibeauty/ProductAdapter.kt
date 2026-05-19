@@ -45,7 +45,7 @@ class ProductAdapter(
 
             val firstAvailable = product.presentations.entries.firstOrNull { it.value.stock > 0 }
             val priceText = firstAvailable?.value?.price ?: 0L
-            binding.productPrice.text = "$$priceText"
+            binding.productPrice.text = priceText.toCOP()
 
             Glide.with(binding.productImage.context)
                 .load(product.imageUrl)
