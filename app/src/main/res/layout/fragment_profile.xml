@@ -199,51 +199,6 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:text="¿Qué tipo de cuenta deseas?"
-                android:textColor="@color/hib_ink"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:id="@+id/roleGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/roleUser"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:checked="true"
-                    android:text="Usuario - Comprar productos"
-                    android:textColor="@color/hib_ink"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/roleDelivery"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="Repartidor - Entregar pedidos"
-                    android:textColor="@color/hib_ink"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/roleAdmin"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="Administrador - Gestionar tienda"
-                    android:textColor="@color/hib_ink"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-            </RadioGroup>
 
             <TextView
                 android:id="@+id/btnRegister"
