@@ -290,6 +290,7 @@ class CartFragment : Fragment() {
                     "userName" to userName,
                     "userPhone" to userPhone,
                     "address" to address,
+                    "paymentMethod" to "Contraentrega",
                     "status" to "Pendiente",
                     "statusLabel" to "Pedido recibido",
                     "subtotal" to subtotal,
@@ -348,7 +349,7 @@ class CartFragment : Fragment() {
 
     private fun showCheckoutButtonAgain() {
         binding.btnCheckout.isEnabled = true
-        binding.btnCheckout.text = "Comprar"
+        binding.btnCheckout.text = "Pedir Contraentrega"
     }
 
     private fun toast(message: String) {
