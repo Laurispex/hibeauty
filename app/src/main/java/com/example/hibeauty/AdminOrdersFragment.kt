@@ -141,9 +141,12 @@ class AdminOrdersFragment : Fragment() {
                 "Preparando"
 
             "Preparando" ->
-                "En camino"
+                "Listo"
 
-            "En camino" ->
+            "Listo" ->
+                "Domicilio Propio"
+
+            "Domicilio Propio" ->
                 "Entregado"
 
             else -> null
@@ -274,8 +277,11 @@ class AdminOrdersFragment : Fragment() {
             "Preparando" ->
                 "Preparando tu compra"
 
-            "En camino" ->
-                "Va en camino"
+            "Listo" ->
+                "Listo para despacho"
+
+            "Domicilio Propio" ->
+                "En ruta directa de tienda"
 
             "Entregado" ->
                 "Pedido entregado"

@@ -65,6 +65,16 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/timeToStoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Tiempo a tienda: -- min"
+            android:textColor="@color/hib_pink"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -80,6 +90,16 @@
             android:text="Calle 85 # 11-53, Bogotá"
             android:textColor="@color/hib_ink"
             android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/timeToClientText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Tiempo al cliente: -- min"
+            android:textColor="#555555"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <!-- ITEMS -->

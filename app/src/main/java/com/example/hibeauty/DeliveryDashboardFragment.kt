@@ -163,6 +163,8 @@ class DeliveryDashboardFragment : Fragment() {
 
                 val availableOrders = snapshots?.documents?.filter { doc ->
                     doc.getString("riderId") == null
+                }?.sortedBy { doc ->
+                    calculateSimulatedTime(doc.id, 1)
                 } ?: emptyList()
 
                 binding.containerAvailableOrders.removeAllViews()
@@ -195,6 +197,13 @@ class DeliveryDashboardFragment : Fragment() {
         
         val address = doc.getString("address") ?: "Dirección no especificada"
         layout.findViewById<TextView>(R.id.destinationAddressText).text = address
+
+        // Calculated times
+        val timeToStore = calculateSimulatedTime(doc.id, 1)
+        val timeToClient = calculateSimulatedTime(doc.id, 2)
+
+        layout.findViewById<TextView>(R.id.timeToStoreText).text = "Tiempo a tienda: $timeToStore min"
+        layout.findViewById<TextView>(R.id.timeToClientText).text = "Tiempo al cliente: $timeToClient min"
 
         // Summarize items
         val itemsList = doc.get("items") as? List<Map<*, *>>
@@ -344,6 +353,11 @@ class DeliveryDashboardFragment : Fragment() {
 
     private fun toast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun calculateSimulatedTime(id: String, salt: Int): Int {
+        // Generates a consistent pseudo-random time between 5 and 30 minutes based on the order ID
+        return kotlin.math.abs((id.hashCode() + salt) % 26) + 5
     }
 
     override fun onDestroyView() {

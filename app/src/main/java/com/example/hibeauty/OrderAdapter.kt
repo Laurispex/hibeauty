@@ -59,19 +59,20 @@ class OrderAdapter(
                 binding.riderInfoContainer.isVisible = false
             }
 
-            val nextStatus = nextStatus(order.status)
-            binding.btnNextOrderStatus.isVisible = showStatusAction && nextStatus != null
-            binding.btnNextOrderStatus.text = nextStatus?.let { "Marcar como $it" } ?: ""
+            val actionText = actionText(order.status)
+            binding.btnNextOrderStatus.isVisible = showStatusAction && actionText != null
+            binding.btnNextOrderStatus.text = actionText ?: ""
             binding.btnNextOrderStatus.setOnClickListener {
                 onStatusAction(order)
             }
         }
 
-        private fun nextStatus(status: String): String? {
+        private fun actionText(status: String): String? {
             return when (status) {
-                "Pendiente" -> "Preparando"
-                "Preparando" -> "En camino"
-                "En camino" -> "Entregado"
+                "Pendiente" -> "Empezar preparación"
+                "Preparando" -> "Publicar a repartidores"
+                "Listo" -> "Asignar Domicilio Propio"
+                "Domicilio Propio" -> "Marcar como Entregado"
                 else -> null
             }
         }
@@ -80,18 +81,21 @@ class OrderAdapter(
             return when (status) {
                 "Pendiente" -> "1 de 4 - Pedido recibido"
                 "Preparando" -> "2 de 4 - Preparando tu compra"
-                "En camino" -> "3 de 4 - Va en camino"
+                "Listo" -> "2 de 4 - Listo para despacho"
+                "Aceptado" -> "3 de 4 - Repartidor asignado"
+                "En_camino", "en_camino" -> "3 de 4 - Va en camino"
+                "Domicilio Propio" -> "3 de 4 - En ruta directa de tienda"
                 "Entregado" -> "4 de 4 - Pedido entregado"
                 "Cancelado" -> "Pedido cancelado"
-                else -> "Estado pendiente de actualizar"
+                else -> "Estado en actualización"
             }
         }
 
         private fun timelineText(status: String): String {
             return when (status) {
                 "Pendiente" -> "● Pedido  ○ Preparando  ○ En camino  ○ Entregado"
-                "Preparando" -> "● Pedido  ● Preparando  ○ En camino  ○ Entregado"
-                "En camino" -> "● Pedido  ● Preparando  ● En camino  ○ Entregado"
+                "Preparando", "Listo" -> "● Pedido  ● Preparando  ○ En camino  ○ Entregado"
+                "Aceptado", "En_camino", "en_camino", "Domicilio Propio" -> "● Pedido  ● Preparando  ● En camino  ○ Entregado"
                 "Entregado" -> "● Pedido  ● Preparando  ● En camino  ● Entregado"
                 else -> "● Pedido  ○ Preparando  ○ En camino  ○ Entregado"
             }
