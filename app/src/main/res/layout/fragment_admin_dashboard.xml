@@ -125,7 +125,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text="Ventas"
-                        android:textColor="#EEE7FF"
+                        android:textColor="#80FFFFFF"
                         android:textSize="12sp" />
 
                     <TextView
@@ -175,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text="Pedidos"
-                        android:textColor="#EEE7FF"
+                        android:textColor="#80FFFFFF"
                         android:textSize="12sp" />
 
                     <TextView
@@ -225,7 +225,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text="Clientes"
-                        android:textColor="#EEE7FF"
+                        android:textColor="#80FFFFFF"
                         android:textSize="12sp" />
 
                     <TextView
@@ -275,7 +275,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text="Productos"
-                        android:textColor="#EEE7FF"
+                        android:textColor="#80FFFFFF"
                         android:textSize="12sp" />
 
                     <TextView

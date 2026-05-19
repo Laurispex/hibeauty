@@ -21,8 +21,8 @@
         android:layout_height="68dp"
         android:background="@drawable/bg_circle_pink"
         android:gravity="center"
-        android:text="1"
-        android:textColor="#7B1CE2"
+        android:text=""
+        android:textColor="@color/hib_violet"
         android:textSize="28sp"
         android:textStyle="bold" />
 
@@ -39,7 +39,7 @@
             android:id="@+id/stepTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Serum Vitamina C"
+            android:text=""
             android:textColor="@color/hib_ink"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="2 min"
+            android:text=""
             android:textColor="@color/hib_muted"
             android:textSize="16sp"
             android:textStyle="bold" />

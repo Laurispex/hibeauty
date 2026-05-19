@@ -11,7 +11,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/bg_soft_circle"
-        android:backgroundTint="#F3E5F5"
+        android:backgroundTint="@color/hib_lilac"
         android:padding="10dp"
         android:src="@drawable/ic_nav_sparkle"
         app:tint="@color/hib_violet"
@@ -28,7 +28,7 @@
             android:id="@+id/productName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Serum Vitamina C"
+            android:text=""
             android:textColor="@color/hib_ink"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -37,7 +37,7 @@
             android:id="@+id/productSales"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="234 ventas"
+            android:text=""
             android:textColor="@color/hib_muted"
             android:textSize="12sp" />
     </LinearLayout>
@@ -52,7 +52,7 @@
             android:id="@+id/productAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$10.5M"
+            android:text=""
             android:textColor="@color/hib_violet"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -61,13 +61,13 @@
             android:id="@+id/productRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4.8"
-            android:textColor="#FBC02D"
+            android:text=""
+            android:textColor="@color/hib_violet"
             android:textSize="12sp"
             android:textStyle="bold"
             android:drawableStart="@drawable/ic_star"
             android:drawablePadding="4dp"
-            android:drawableTint="#FBC02D"
+            android:drawableTint="@color/hib_violet"
             android:gravity="center_vertical" />
     </LinearLayout>
 

@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Pedido #123456"
+            android:text=""
             android:textColor="@color/hib_ink"
             android:textSize="17sp"
             android:textStyle="bold" />
@@ -32,8 +32,8 @@
             android:gravity="center"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:text="Pendiente"
-            android:textColor="#FFFFFF"
+            android:text=""
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="1 de 4 - Pedido recibido"
+        android:text=""
         android:textColor="@color/hib_pink"
         android:textSize="15sp"
         android:textStyle="bold" />
@@ -56,7 +56,7 @@
         android:background="@drawable/bg_status_track"
         android:gravity="center"
         android:padding="14dp"
-        android:text="● Pedido  ○ Preparando  ○ En camino  ○ Entregado"
+        android:text=""
         android:textColor="@color/hib_ink"
         android:textSize="13sp"
         android:textStyle="bold" />
@@ -66,7 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="1 x Serum (50ml)"
+        android:text=""
         android:textColor="@color/hib_muted"
         android:textSize="15sp"
         android:textStyle="bold" />
@@ -76,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="Total: $0"
+        android:text=""
         android:textColor="@color/hib_ink"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:background="#FFF5F7"
+        android:background="@color/hib_surface"
         android:orientation="vertical"
         android:padding="8dp"
         android:visibility="gone">
@@ -95,7 +95,7 @@
             android:id="@+id/orderRiderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Repartidor: Cargando..."
+            android:text=""
             android:textColor="@color/hib_ink"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -108,8 +108,8 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_button_pink"
         android:gravity="center"
-        android:text="Marcar como Preparando"
-        android:textColor="#FFFFFF"
+        android:text=""
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold" />
 </LinearLayout>

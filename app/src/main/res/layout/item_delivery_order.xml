@@ -27,7 +27,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="#BT-E83921"
+                android:text=""
                 android:textColor="@color/hib_ink"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -36,7 +36,7 @@
                 android:id="@+id/payoutText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pago: $8.000"
+                android:text=""
                 android:textColor="@color/hib_hot_pink"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -46,21 +46,21 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginVertical="10dp"
-            android:background="#FFF0F2" />
+            android:background="@color/hib_surface" />
 
         <!-- DETAILS -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tienda (Recogida):"
-            android:textColor="#888888"
+            android:textColor="@color/hib_muted"
             android:textSize="11sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="HiBeauty — Av. Carrera 15 # 82-24, Bogotá"
+            android:text="HiBeauty — Sede Principal"
             android:textColor="@color/hib_ink"
             android:textSize="13sp" />
 
@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Tiempo a tienda: -- min"
+            android:text=""
             android:textColor="@color/hib_pink"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Entrega a (Destino):"
-            android:textColor="#888888"
+            android:textColor="@color/hib_muted"
             android:textSize="11sp" />
 
         <TextView
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Calle 85 # 11-53, Bogotá"
+            android:text=""
             android:textColor="@color/hib_ink"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -97,8 +97,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Tiempo al cliente: -- min"
-            android:textColor="#555555"
+            android:text=""
+            android:textColor="@color/hib_muted"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -108,10 +108,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="#FFF7F8"
-            android:padding="6dp"
-            android:text="Productos: 1x Skincare Serum, 1x Lip Gloss"
-            android:textColor="#666666"
+            android:background="@color/hib_surface"
+            android:padding="8dp"
+            android:text=""
+            android:textColor="@color/hib_muted"
             android:textSize="12sp" />
 
         <!-- ACCEPT BUTTON -->

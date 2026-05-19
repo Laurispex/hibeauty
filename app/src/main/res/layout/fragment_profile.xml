@@ -470,7 +470,7 @@
                             android:id="@+id/profileDiscounts"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="5"
+                            android:text="0"
                             android:textColor="@color/hib_pink"
                             android:textSize="24sp"
                             android:textStyle="bold" />
@@ -516,14 +516,14 @@
                         android:layout_height="12dp"
                         android:layout_marginTop="12dp"
                         android:max="100"
-                        android:progress="65"
+                        android:progress="0"
                         android:progressTint="@color/hib_pink" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="$35.000 más para desbloquear"
+                        android:text="Completa pedidos para desbloquear"
                         android:textColor="@color/hib_muted"
                         android:textSize="14sp"
                         android:textStyle="bold" />

@@ -241,8 +241,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Nombre del Cliente"
-                android:textColor="#333333"
+                android:text=""
+                android:textColor="@color/hib_ink"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -251,8 +251,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Calle 85 # 11-53, Bogotá"
-                android:textColor="#555555"
+                android:text=""
+                android:textColor="@color/hib_muted"
                 android:textSize="13sp" />
 
             <TextView
@@ -260,8 +260,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Teléfono: +57 312 4567890"
-                android:textColor="#555555"
+                android:text=""
+                android:textColor="@color/hib_muted"
                 android:textSize="13sp" />
 
             <!-- ITEMS -->
@@ -270,9 +270,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="#FFF5F7"
-                android:padding="8dp"
-                android:text="Productos: 1x Loción hidratante, 2x Lipstick"
+                android:background="@color/hib_surface"
+                android:padding="10dp"
+                android:text=""
                 android:textColor="@color/hib_ink"
                 android:textSize="12sp" />
 
@@ -337,7 +337,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:text="En cuanto una tienda termine de preparar un pedido, aparecerá aquí al instante para que lo entregues."
-                android:textColor="#777777"
+                android:textColor="@color/hib_muted"
                 android:textSize="12sp" />
         </LinearLayout>
 
