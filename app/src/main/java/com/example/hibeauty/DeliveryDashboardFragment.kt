@@ -202,7 +202,7 @@ class DeliveryDashboardFragment : Fragment() {
             val qty = item["quantity"] ?: 1
             val name = item["name"] ?: "Producto"
             "${qty}x $name"
-        } ?: "Productos de Belleza ✨"
+        } ?: "Productos de Belleza"
         layout.findViewById<TextView>(R.id.itemsSummaryText).text = "Productos: $itemsSummary"
 
         // Accept Button
@@ -227,7 +227,7 @@ class DeliveryDashboardFragment : Fragment() {
 
         db.collection("orders").document(orderId).update(updates as Map<String, Any>)
             .addOnSuccessListener {
-                toast("¡Pedido aceptado! 🏍️ Dirígete a la tienda")
+                toast("¡Pedido aceptado! Dirígete a la tienda")
             }
             .addOnFailureListener {
                 toast("Error al aceptar pedido")
@@ -252,18 +252,18 @@ class DeliveryDashboardFragment : Fragment() {
             val qty = item["quantity"] ?: 1
             val name = item["name"] ?: "Producto"
             "${qty}x $name"
-        } ?: "Productos de Belleza ✨"
+        } ?: "Productos de Belleza"
         binding.activeOrderItemsSummary.text = "Productos: $itemsSummary"
 
         val status = doc.getString("status")?.lowercase() ?: ""
         
         if (status == "en_camino") {
-            binding.btnUpdateDeliveryStatus.text = "Marcar como Entregado ✅"
+            binding.btnUpdateDeliveryStatus.text = "Marcar como Entregado"
             binding.btnUpdateDeliveryStatus.setOnClickListener {
                 markAsDelivered(doc)
             }
         } else {
-            binding.btnUpdateDeliveryStatus.text = "Marcar como En Camino 🛵"
+            binding.btnUpdateDeliveryStatus.text = "Marcar como En Camino"
             binding.btnUpdateDeliveryStatus.setOnClickListener {
                 markAsOnTheWay(doc.id)
             }
@@ -291,7 +291,7 @@ class DeliveryDashboardFragment : Fragment() {
 
         db.collection("orders").document(orderId).update(updates as Map<String, Any>)
             .addOnSuccessListener {
-                toast("¡Vas en camino! 🛵 Conduce con cuidado")
+                toast("¡Vas en camino! Conduce con cuidado")
             }
             .addOnFailureListener {
                 toast("Error al actualizar estado")
@@ -308,7 +308,7 @@ class DeliveryDashboardFragment : Fragment() {
         // 1. Update order status
         val orderRef = db.collection("orders").document(orderId)
         batch.update(orderRef, "status", "Entregado")
-        batch.update(orderRef, "statusLabel", "Entregado con éxito 💕")
+        batch.update(orderRef, "statusLabel", "Entregado con éxito")
         batch.update(orderRef, "statusUpdatedAt", FieldValue.serverTimestamp())
 
         // 2. Increment completed deliveries and add earnings to rider user document

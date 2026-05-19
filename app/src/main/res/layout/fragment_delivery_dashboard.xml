@@ -188,7 +188,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="⚡ Pedido Activo en Curso"
+                    android:text="Pedido Activo en Curso"
                     android:textColor="@color/hib_hot_pink"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -300,7 +300,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="@color/hib_pink"
-                    android:text="Marcar como En Camino 🛵"
+                    android:text="Marcar como En Camino"
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
@@ -336,7 +336,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:gravity="center"
-                android:text="En cuanto una tienda termine de preparar un pedido de belleza, aparecerá aquí al instante para que lo entregues. ⚡"
+                android:text="En cuanto una tienda termine de preparar un pedido, aparecerá aquí al instante para que lo entregues."
                 android:textColor="#777777"
                 android:textSize="12sp" />
         </LinearLayout>

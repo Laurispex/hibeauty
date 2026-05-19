@@ -95,7 +95,7 @@
             android:id="@+id/orderRiderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🏍️ Repartidor: Cargando..."
+            android:text="Repartidor: Cargando..."
             android:textColor="@color/hib_ink"
             android:textSize="13sp"
             android:textStyle="bold" />

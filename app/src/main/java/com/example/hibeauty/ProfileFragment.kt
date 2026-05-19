@@ -110,7 +110,7 @@ class ProfileFragment : Fragment() {
 
                 val name =
                     document.getString("name")
-                        ?: "Beauty Lover ✨"
+                        ?: "Beauty Lover"
 
                 val email =
                     currentUser.email
@@ -245,7 +245,7 @@ class ProfileFragment : Fragment() {
 
                     Toast.makeText(
                         requireContext(),
-                        "Completa todos los campos 💕",
+                        "Completa todos los campos",
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -261,7 +261,7 @@ class ProfileFragment : Fragment() {
 
                         Toast.makeText(
                             requireContext(),
-                            "Bienvenida a HiBeauty ✨",
+                            "Bienvenida a HiBeauty",
                             Toast.LENGTH_SHORT
                         ).show()
 
@@ -322,7 +322,7 @@ class ProfileFragment : Fragment() {
 
                     Toast.makeText(
                         requireContext(),
-                        "Completa todos los campos 💕",
+                        "Completa todos los campos",
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -332,7 +332,7 @@ class ProfileFragment : Fragment() {
                 if (isDelivery && (vehicle.isEmpty() || plate.isEmpty())) {
                     Toast.makeText(
                         requireContext(),
-                        "Repartidor: Debes ingresar el vehículo y la placa 🏍️",
+                        "Repartidor: Debes ingresar el vehículo y la placa",
                         Toast.LENGTH_SHORT
                     ).show()
                     return@setOnClickListener
@@ -384,7 +384,7 @@ class ProfileFragment : Fragment() {
                             .addOnSuccessListener {
                                 Toast.makeText(
                                     requireContext(),
-                                    "Cuenta creada exitosamente ✨",
+                                    "Cuenta creada exitosamente",
                                     Toast.LENGTH_LONG
                                 ).show()
                                 binding.btnRegister.text = "Crear cuenta"
@@ -445,7 +445,7 @@ class ProfileFragment : Fragment() {
 
                 Toast.makeText(
                     requireContext(),
-                    "Tus favoritos 💖",
+                    "Tus favoritos",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -505,7 +505,7 @@ class ProfileFragment : Fragment() {
 
                 Toast.makeText(
                     requireContext(),
-                    "Centro de ayuda 💕",
+                    "Centro de ayuda",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -531,7 +531,7 @@ class ProfileFragment : Fragment() {
 
                 Toast.makeText(
                     requireContext(),
-                    "Sesión cerrada 💕",
+                    "Sesión cerrada",
                     Toast.LENGTH_SHORT
                 ).show()
 

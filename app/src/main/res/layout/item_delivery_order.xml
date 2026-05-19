@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:backgroundTint="@color/hib_pink"
-            android:text="Aceptar Pedido 🏍️"
+            android:text="Aceptar Pedido"
             android:textColor="@color/white"
             android:textStyle="bold" />
 

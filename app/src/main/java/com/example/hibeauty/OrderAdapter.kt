@@ -54,7 +54,7 @@ class OrderAdapter(
 
             if (order.riderName.isNotEmpty()) {
                 binding.riderInfoContainer.isVisible = true
-                binding.orderRiderText.text = "🏍️ Repartidor: ${order.riderName} (${order.riderPhone})"
+                binding.orderRiderText.text = "Repartidor: ${order.riderName} (${order.riderPhone})"
             } else {
                 binding.riderInfoContainer.isVisible = false
             }
