@@ -81,6 +81,26 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
+    <LinearLayout
+        android:id="@+id/riderInfoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#FFF5F7"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/orderRiderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🏍️ Repartidor: Cargando..."
+            android:textColor="@color/hib_ink"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/btnNextOrderStatus"
         android:layout_width="match_parent"

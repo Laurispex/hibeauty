@@ -20,6 +20,8 @@ class ProfileFragment : Fragment() {
 
     private lateinit var firestore: FirebaseFirestore
 
+    // Registration flow variables
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -141,13 +143,17 @@ class ProfileFragment : Fragment() {
 
                 // DELIVERY
 
-                if (role.lowercase() == "delivery") {
+                if (
+                    role.lowercase() == "delivery" ||
+                    role.lowercase() == "repartidor"
+                ) {
 
-                    Toast.makeText(
-                        requireContext(),
-                        "Panel de repartidor próximamente",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    parentFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.fragment_container,
+                            DeliveryDashboardFragment()
+                        )
+                        .commit()
 
                     return@addOnSuccessListener
                 }
@@ -207,6 +213,15 @@ class ProfileFragment : Fragment() {
                 binding.registerContainer.visibility =
                     View.VISIBLE
             }
+
+        // ROLE SELECTOR
+        binding.registerRoleGroup.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == R.id.radioRoleDelivery) {
+                binding.deliveryFieldsContainer.visibility = View.VISIBLE
+            } else {
+                binding.deliveryFieldsContainer.visibility = View.GONE
+            }
+        }
 
         // LOGIN
 
@@ -293,6 +308,10 @@ class ProfileFragment : Fragment() {
                         .toString()
                         .trim()
 
+                val isDelivery = binding.registerRoleGroup.checkedRadioButtonId == R.id.radioRoleDelivery
+                val vehicle = binding.registerVehicle.text.toString().trim()
+                val plate = binding.registerPlate.text.toString().trim()
+
                 if (
                     name.isEmpty() ||
                     email.isEmpty() ||
@@ -310,6 +329,15 @@ class ProfileFragment : Fragment() {
                     return@setOnClickListener
                 }
 
+                if (isDelivery && (vehicle.isEmpty() || plate.isEmpty())) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Repartidor: Debes ingresar el vehículo y la placa 🏍️",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+
                 if (password.length < 6) {
 
                     Toast.makeText(
@@ -321,68 +349,68 @@ class ProfileFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-                auth.createUserWithEmailAndPassword(
-                    email,
-                    password
+                binding.btnRegister.text = "Registrando..."
+                binding.btnRegister.isEnabled = false
+
+                val selectedRole = when {
+                    isDelivery -> "delivery"
+                    email.contains("admin", ignoreCase = true) -> "admin"
+                    else -> "user"
+                }
+
+                val userMap = hashMapOf<String, Any>(
+                    "name" to name,
+                    "email" to email,
+                    "phone" to phone,
+                    "identification" to identification,
+                    "role" to selectedRole,
+                    "address" to "Calle 85 # 11-53, Bogotá", // Premium default delivery address
+                    "createdAt" to System.currentTimeMillis()
                 )
 
+                if (isDelivery) {
+                    userMap["vehicle"] = vehicle
+                    userMap["plate"] = plate
+                    userMap["completedDeliveries"] = 0L
+                    userMap["earnings"] = 0L
+                }
+
+                auth.createUserWithEmailAndPassword(email, password)
                     .addOnSuccessListener { result ->
-
-                        val uid =
-                            result.user?.uid ?: ""
-
-                        val selectedRole = "user"
-
-                        val userMap =
-                            hashMapOf(
-
-                                "name" to name,
-
-                                "email" to email,
-
-                                "phone" to phone,
-
-                                "identification" to identification,
-
-                                "role" to selectedRole,
-
-                                "createdAt" to
-                                        System.currentTimeMillis()
-                            )
-
+                        val uid = result.user?.uid ?: ""
                         firestore.collection("users")
                             .document(uid)
                             .set(userMap)
-
                             .addOnSuccessListener {
-
                                 Toast.makeText(
                                     requireContext(),
                                     "Cuenta creada exitosamente ✨",
                                     Toast.LENGTH_LONG
                                 ).show()
-
+                                binding.btnRegister.text = "Crear cuenta"
+                                binding.btnRegister.isEnabled = true
                                 validateSession()
                             }
-
                             .addOnFailureListener { e ->
-
                                 Toast.makeText(
                                     requireContext(),
                                     "Error Firestore: ${e.message}",
                                     Toast.LENGTH_LONG
                                 ).show()
+                                binding.btnRegister.text = "Crear cuenta"
+                                binding.btnRegister.isEnabled = true
                             }
                     }
-
                     .addOnFailureListener { e ->
-
                         Toast.makeText(
                             requireContext(),
-                            "Error Auth: ${e.message}",
+                            "Error Registro: ${e.message}",
                             Toast.LENGTH_LONG
                         ).show()
+                        binding.btnRegister.text = "Crear cuenta"
+                        binding.btnRegister.isEnabled = true
                     }
+                // Register flow end
             }
 
         // BACK

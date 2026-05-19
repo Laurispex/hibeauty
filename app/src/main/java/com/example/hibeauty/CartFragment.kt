@@ -261,74 +261,88 @@ class CartFragment : Fragment() {
     ) {
         binding.btnCheckout.text = "Creando pedido..."
 
-        val subtotal = checkedItems.sumOf { it.price * it.quantity }
-        val shipping = 8000L
-        val total = subtotal + shipping
-        val earnedPoints = (subtotal / 1000L).coerceAtLeast(1L)
-        val orderRef = db.collection("orders").document()
+        db.collection("users").document(userId).get()
+            .addOnSuccessListener { userDoc ->
+                val userName = userDoc.getString("name") ?: "Cliente"
+                val userPhone = userDoc.getString("phone") ?: "Sin teléfono"
+                val address = userDoc.getString("address") ?: "Calle 85 # 11-53, Bogotá"
 
-        val items = checkedItems.map { item ->
-            hashMapOf(
-                "productId" to item.productId,
-                "name" to item.name,
-                "imageUrl" to item.imageUrl,
-                "presentation" to item.presentation,
-                "price" to item.price,
-                "quantity" to item.quantity
-            )
-        }
+                val subtotal = checkedItems.sumOf { it.price * it.quantity }
+                val shipping = 8000L
+                val total = subtotal + shipping
+                val earnedPoints = (subtotal / 1000L).coerceAtLeast(1L)
+                val orderRef = db.collection("orders").document()
 
-        val order = hashMapOf(
-            "id" to orderRef.id,
-            "userId" to userId,
-            "status" to "Pendiente",
-            "statusLabel" to "Pedido recibido",
-            "subtotal" to subtotal,
-            "shipping" to shipping,
-            "total" to total,
-            "earnedPoints" to earnedPoints,
-            "items" to items,
-            "createdAt" to FieldValue.serverTimestamp(),
-            "statusUpdatedAt" to FieldValue.serverTimestamp(),
-            "createdAtMillis" to System.currentTimeMillis(),
-            "statusHistory" to listOf(
-                hashMapOf(
+                val items = checkedItems.map { item ->
+                    hashMapOf(
+                        "productId" to item.productId,
+                        "name" to item.name,
+                        "imageUrl" to item.imageUrl,
+                        "presentation" to item.presentation,
+                        "price" to item.price,
+                        "quantity" to item.quantity
+                    )
+                }
+
+                val order = hashMapOf(
+                    "id" to orderRef.id,
+                    "userId" to userId,
+                    "userName" to userName,
+                    "userPhone" to userPhone,
+                    "address" to address,
                     "status" to "Pendiente",
-                    "label" to "Pedido recibido",
-                    "changedAtMillis" to System.currentTimeMillis()
+                    "statusLabel" to "Pedido recibido",
+                    "subtotal" to subtotal,
+                    "shipping" to shipping,
+                    "total" to total,
+                    "earnedPoints" to earnedPoints,
+                    "items" to items,
+                    "createdAt" to FieldValue.serverTimestamp(),
+                    "statusUpdatedAt" to FieldValue.serverTimestamp(),
+                    "createdAtMillis" to System.currentTimeMillis(),
+                    "statusHistory" to listOf(
+                        hashMapOf(
+                            "status" to "Pendiente",
+                            "label" to "Pedido recibido",
+                            "changedAtMillis" to System.currentTimeMillis()
+                        )
+                    )
                 )
-            )
-        )
 
-        batch.set(orderRef, order)
-        batch.set(
-            db.collection("users").document(userId),
-            mapOf(
-                "points" to FieldValue.increment(earnedPoints),
-                "orderCount" to FieldValue.increment(1),
-                "totalSpent" to FieldValue.increment(total)
-            ),
-            SetOptions.merge()
-        )
+                batch.set(orderRef, order)
+                batch.set(
+                    db.collection("users").document(userId),
+                    mapOf(
+                        "points" to FieldValue.increment(earnedPoints),
+                        "orderCount" to FieldValue.increment(1),
+                        "totalSpent" to FieldValue.increment(total)
+                    ),
+                    SetOptions.merge()
+                )
 
-        checkedItems.forEach { item ->
-            val cartRef = db.collection("carts")
-                .document(userId)
-                .collection("items")
-                .document(item.id)
+                checkedItems.forEach { item ->
+                    val cartRef = db.collection("carts")
+                        .document(userId)
+                        .collection("items")
+                        .document(item.id)
 
-            batch.delete(cartRef)
-        }
+                    batch.delete(cartRef)
+                }
 
-        batch.commit()
-            .addOnSuccessListener {
-                showCheckoutButtonAgain()
-                toast("Pedido creado")
-                loadCart()
+                batch.commit()
+                    .addOnSuccessListener {
+                        showCheckoutButtonAgain()
+                        toast("Pedido creado")
+                        loadCart()
+                    }
+                    .addOnFailureListener {
+                        showCheckoutButtonAgain()
+                        toast("No se pudo crear el pedido")
+                    }
             }
             .addOnFailureListener {
                 showCheckoutButtonAgain()
-                toast("No se pudo crear el pedido")
+                toast("Error al obtener datos del usuario")
             }
     }
 

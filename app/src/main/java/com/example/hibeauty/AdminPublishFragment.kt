@@ -46,7 +46,7 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
     // ☁️ CONFIGURACIÓN DE CLOUDINARY
     // ==========================================
     private val CLOUDINARY_CLOUD_NAME = "dswicy00p"     // Tu Cloud Name
-    private val CLOUDINARY_UPLOAD_PRESET = "hi-beauty"   // Tu Upload Preset Unsigned
+    private val CLOUDINARY_UPLOAD_PRESET = "hibeauty"   // Tu Upload Preset Unsigned
 
     // Activity Result Launcher to pick images from the device gallery
     private val pickImageLauncher = registerForActivityResult(

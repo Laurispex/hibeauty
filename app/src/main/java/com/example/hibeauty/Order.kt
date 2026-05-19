@@ -5,7 +5,9 @@ data class Order(
     val userId: String = "",
     val status: String = "",
     val total: Long = 0L,
-    val items: List<OrderItem> = emptyList()
+    val items: List<OrderItem> = emptyList(),
+    val riderName: String = "",
+    val riderPhone: String = ""
 )
 
 data class OrderItem(

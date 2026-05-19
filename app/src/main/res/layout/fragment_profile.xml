@@ -208,6 +208,80 @@
                 android:paddingEnd="20dp" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Quiero registrarme como:"
+                android:textColor="@color/hib_muted"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/registerRoleGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checkedButton="@id/radioRoleUser"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioRoleUser"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🛍️ Cliente"
+                    android:textColor="@color/hib_ink"
+                    android:buttonTint="@color/hib_pink"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/radioRoleDelivery"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🏍️ Repartidor"
+                    android:textColor="@color/hib_ink"
+                    android:buttonTint="@color/hib_pink"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/deliveryFieldsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/registerVehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_search"
+                    android:hint="Vehículo (Ej: Moto, Bici, Carro)"
+                    android:inputType="text"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
+                    android:textColor="@color/hib_ink"
+                    android:textColorHint="@color/hib_muted" />
+
+                <EditText
+                    android:id="@+id/registerPlate"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_search"
+                    android:hint="Placa del vehículo"
+                    android:inputType="textCapCharacters"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
+                    android:textColor="@color/hib_ink"
+                    android:textColorHint="@color/hib_muted" />
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"

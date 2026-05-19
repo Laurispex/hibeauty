@@ -52,6 +52,13 @@ class OrderAdapter(
             binding.orderProgress.text = progressText(order.status)
             binding.orderTimeline.text = timelineText(order.status)
 
+            if (order.riderName.isNotEmpty()) {
+                binding.riderInfoContainer.isVisible = true
+                binding.orderRiderText.text = "🏍️ Repartidor: ${order.riderName} (${order.riderPhone})"
+            } else {
+                binding.riderInfoContainer.isVisible = false
+            }
+
             val nextStatus = nextStatus(order.status)
             binding.btnNextOrderStatus.isVisible = showStatusAction && nextStatus != null
             binding.btnNextOrderStatus.text = nextStatus?.let { "Marcar como $it" } ?: ""
