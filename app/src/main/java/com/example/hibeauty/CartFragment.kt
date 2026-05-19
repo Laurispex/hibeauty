@@ -154,7 +154,7 @@ class CartFragment : Fragment() {
                 .setTitle("Upss! 💕")
 
                 .setMessage(
-                    "Todas queremos ser BeautyLovers ✨\n\nPara continuar con tu compra regístrate e inicia sesión."
+                    "Todas queremos ser BeautyLovers \n\nPara continuar con tu compra regístrate e inicia sesión."
                 )
 
                 .setPositiveButton(

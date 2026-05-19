@@ -75,7 +75,7 @@ class ProductDetailFragment(
         when {
 
             product.isFeatured -> {
-                binding.detailCategory.text = "✨ Bestseller"
+                binding.detailCategory.text = " Bestseller"
             }
 
             product.isNew -> {

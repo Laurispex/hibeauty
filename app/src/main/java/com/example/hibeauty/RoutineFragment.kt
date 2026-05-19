@@ -162,7 +162,7 @@ class RoutineFragment : Fragment() {
 
                                 icon =
                                     it.getString("icon")
-                                        ?: "✨",
+                                        ?: "",
 
                                 completed =
                                     it.getBoolean(
@@ -206,7 +206,7 @@ class RoutineFragment : Fragment() {
                 id = "3",
                 title = "Serum Vitamina C",
                 duration = "2 min",
-                icon = "✨"
+                icon = ""
             ),
 
             RoutineStep(
@@ -314,7 +314,7 @@ class RoutineFragment : Fragment() {
 
             duration = "2 min",
 
-            icon = "✨"
+            icon = ""
         )
 
         routineSteps.add(newStep)

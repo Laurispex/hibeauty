@@ -64,7 +64,7 @@
         android:layout_height="54dp"
         android:background="@drawable/bg_soft_circle"
         android:gravity="center"
-        android:text="✨"
+        android:text=""
         android:textSize="24sp" />
 
 </LinearLayout>

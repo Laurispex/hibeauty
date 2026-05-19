@@ -8,7 +8,7 @@ data class RoutineStep(
 
     val duration: String = "",
 
-    val icon: String = "✨",
+    val icon: String = "",
 
     var completed: Boolean = false
 )

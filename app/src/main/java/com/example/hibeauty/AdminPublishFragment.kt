@@ -360,7 +360,7 @@ class AdminPublishFragment : Fragment(R.layout.fragment_admin_publish) {
             .document(productId)
             .set(productMap)
             .addOnSuccessListener {
-                toast(if (productIdToEdit != null) "Cambios guardados ✨" else "Producto publicado ✨")
+                toast(if (productIdToEdit != null) "Cambios guardados " else "Producto publicado ")
                 if (productIdToEdit != null) {
                     parentFragmentManager.popBackStack()
                 } else {

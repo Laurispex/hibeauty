@@ -397,7 +397,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="Pagas al recibir tu pedido en casa ✨"
+            android:text="Pagas al recibir tu pedido en casa "
             android:textColor="@color/hib_muted"
             android:textSize="13sp"
             android:textStyle="bold" />

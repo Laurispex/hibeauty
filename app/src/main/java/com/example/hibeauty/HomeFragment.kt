@@ -282,7 +282,7 @@ class HomeFragment : Fragment() {
                     }
 
                 binding.homeProductsTitle.text =
-                    "Productos de la semana ✨"
+                    "Productos de la semana "
 
                 productAdapter.submitList(
                     products
@@ -341,7 +341,7 @@ class HomeFragment : Fragment() {
                     }
 
                 binding.homeProductsTitle.text =
-                    "Productos de la semana ✨"
+                    "Productos de la semana "
 
                 productAdapter.submitList(
                     products
