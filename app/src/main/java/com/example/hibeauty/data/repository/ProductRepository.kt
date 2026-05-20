@@ -14,9 +14,8 @@ class ProductRepository(
     // ─── READ ──────────────────────────────────────────────────────────────────
 
     suspend fun getActiveProducts(): Result<List<Product>> = runCatching {
-        // Se descargan todos para que los productos antiguos (sin el campo isActive)
-        // se puedan mapear correctamente a true y no sean descartados por Firestore.
         collection
+            .whereEqualTo("isActive", true)
             .get()
             .await()
             .documents
@@ -27,6 +26,7 @@ class ProductRepository(
     suspend fun getProductsByCategory(category: String): Result<List<Product>> = runCatching {
         collection
             .whereEqualTo("category", category)
+            .whereEqualTo("isActive", true)
             .get()
             .await()
             .documents
@@ -39,12 +39,7 @@ class ProductRepository(
     }
 
     suspend fun getAllForStore(): Result<List<Product>> = runCatching {
-        // Obtenemos todos los productos y los ordenamos por fecha de creación (los más nuevos arriba).
-        // Los productos antiguos que no tengan fecha quedarán al final.
-        collection.get().await().documents
-            .map { doc -> doc.toProduct() to (doc.getDate("createdAt")?.time ?: 0L) }
-            .sortedByDescending { it.second }
-            .map { it.first }
+        collection.get().await().documents.map { it.toProduct() }.filter { it.isActive }
     }
 
     // ─── WRITE ─────────────────────────────────────────────────────────────────
