@@ -1,167 +1,51 @@
 package com.example.hibeauty
 
+import com.example.hibeauty.data.model.Product
+import com.example.hibeauty.data.model.Order
+import com.example.hibeauty.data.model.CartItem
+import com.example.hibeauty.data.model.RoutineStep
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hibeauty.databinding.FragmentUserOrdersBinding
+import com.example.hibeauty.ui.orders.UserOrdersUiState
+import com.example.hibeauty.ui.orders.UserOrdersViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import kotlinx.coroutines.launch
 
 class UserOrdersFragment : Fragment() {
 
     private var _binding: FragmentUserOrdersBinding? = null
     private val binding get() = _binding!!
 
-    private val db: FirebaseFirestore by lazy {
-        FirebaseFirestore.getInstance()
-    }
+    private val viewModel: UserOrdersViewModel by viewModels()
 
-    private val auth: FirebaseAuth by lazy {
-        FirebaseAuth.getInstance()
-    }
+    private val orderAdapter = OrderAdapter(showStatusAction = false) { /* read-only */ }
 
-    private val orderAdapter =
-        OrderAdapter(showStatusAction = false) { _ ->
-            // No action needed for users, just tracking
-        }
+    // ─── LIFECYCLE ─────────────────────────────────────────────────────────────
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentUserOrdersBinding.inflate(
-                inflater,
-                container,
-                false
-            )
+        _binding = FragmentUserOrdersBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.userOrdersRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext())
-
-        binding.userOrdersRecyclerView.adapter =
-            orderAdapter
-
-        // BACK BUTTON
-        binding.btnBackOrders.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-
-        loadUserOrders()
-    }
-
-    private fun loadUserOrders() {
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            binding.userOrdersEmptyText.isVisible = true
-            binding.userOrdersEmptyText.text = "Inicia sesión para ver tus pedidos."
-            binding.userOrdersRecyclerView.isVisible = false
-            return
-        }
-
-        binding.userOrdersEmptyText.isVisible = true
-        binding.userOrdersEmptyText.text = "Cargando tus pedidos..."
-        binding.userOrdersRecyclerView.isVisible = false
-
-        db.collection("orders")
-            .whereEqualTo("userId", currentUser.uid)
-            .orderBy("createdAtMillis", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                if (_binding == null) return@addOnSuccessListener
-
-                val orders = result.documents.map { document ->
-                    documentToOrder(document.id, document.data.orEmpty())
-                }
-
-                if (orders.isEmpty()) {
-                    binding.userOrdersEmptyText.isVisible = true
-                    binding.userOrdersEmptyText.text = "Aún no tienes pedidos registrados. ¡Haz tu primera compra! 💖"
-                    binding.userOrdersRecyclerView.isVisible = false
-                    return@addOnSuccessListener
-                }
-
-                orderAdapter.submitList(orders)
-                binding.userOrdersEmptyText.isVisible = false
-                binding.userOrdersRecyclerView.isVisible = true
-            }
-            .addOnFailureListener { e ->
-                // Si falla por índice de Firestore, intentar cargar sin ordenar por fecha
-                loadUserOrdersWithoutSorting(currentUser.uid)
-            }
-    }
-
-    private fun loadUserOrdersWithoutSorting(userId: String) {
-        db.collection("orders")
-            .whereEqualTo("userId", userId)
-            .get()
-            .addOnSuccessListener { result ->
-                if (_binding == null) return@addOnSuccessListener
-
-                val orders = result.documents.map { document ->
-                    documentToOrder(document.id, document.data.orEmpty())
-                }
-
-                if (orders.isEmpty()) {
-                    binding.userOrdersEmptyText.isVisible = true
-                    binding.userOrdersEmptyText.text = "Aún no tienes pedidos registrados. ¡Haz tu primera compra! 💖"
-                    binding.userOrdersRecyclerView.isVisible = false
-                    return@addOnSuccessListener
-                }
-
-                // Ordenar localmente por ID o tiempo si existe
-                val sortedOrders = orders.sortedByDescending { it.id }
-
-                orderAdapter.submitList(sortedOrders)
-                binding.userOrdersEmptyText.isVisible = false
-                binding.userOrdersRecyclerView.isVisible = true
-            }
-            .addOnFailureListener { e ->
-                if (_binding == null) return@addOnFailureListener
-                binding.userOrdersEmptyText.isVisible = true
-                binding.userOrdersEmptyText.text = "No se pudieron cargar los pedidos: ${e.message}"
-                binding.userOrdersRecyclerView.isVisible = false
-            }
-    }
-
-    private fun documentToOrder(
-        documentId: String,
-        data: Map<String, Any>
-    ): Order {
-        val rawItems = data["items"] as? List<*> ?: emptyList<Any>()
-        val items = rawItems.mapNotNull { rawItem ->
-            val item = rawItem as? Map<*, *> ?: return@mapNotNull null
-            OrderItem(
-                name = item["name"] as? String ?: "",
-                presentation = item["presentation"] as? String ?: "",
-                quantity = (item["quantity"] as? Number)?.toLong() ?: 0L,
-                price = (item["price"] as? Number)?.toLong() ?: 0L
-            )
-        }
-
-        return Order(
-            id = data["id"] as? String ?: documentId,
-            userId = data["userId"] as? String ?: "",
-            status = data["status"] as? String ?: "Pendiente",
-            total = (data["total"] as? Number)?.toLong() ?: 0L,
-            items = items
-        )
+        binding.userOrdersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.userOrdersRecyclerView.adapter = orderAdapter
+        binding.btnBackOrders.setOnClickListener { parentFragmentManager.popBackStack() }
+        observeViewModel()
+        viewModel.load()
     }
 
     override fun onResume() {
@@ -174,8 +58,43 @@ class UserOrdersFragment : Fragment() {
         activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.VISIBLE
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onDestroyView() { super.onDestroyView(); _binding = null }
+
+    // ─── OBSERVER ──────────────────────────────────────────────────────────────
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is UserOrdersUiState.Loading -> {
+                            binding.userOrdersEmptyText.isVisible = true
+                            binding.userOrdersEmptyText.text = "Cargando tus pedidos..."
+                            binding.userOrdersRecyclerView.isVisible = false
+                        }
+                        is UserOrdersUiState.NotLoggedIn -> {
+                            binding.userOrdersEmptyText.isVisible = true
+                            binding.userOrdersEmptyText.text = "Inicia sesión para ver tus pedidos."
+                            binding.userOrdersRecyclerView.isVisible = false
+                        }
+                        is UserOrdersUiState.Empty -> {
+                            binding.userOrdersEmptyText.isVisible = true
+                            binding.userOrdersEmptyText.text = "Aún no tienes pedidos. ¡Haz tu primera compra! 💖"
+                            binding.userOrdersRecyclerView.isVisible = false
+                        }
+                        is UserOrdersUiState.Ready -> {
+                            orderAdapter.submitList(state.orders)
+                            binding.userOrdersEmptyText.isVisible = false
+                            binding.userOrdersRecyclerView.isVisible = true
+                        }
+                        is UserOrdersUiState.Error -> {
+                            binding.userOrdersEmptyText.isVisible = true
+                            binding.userOrdersEmptyText.text = state.message
+                            binding.userOrdersRecyclerView.isVisible = false
+                        }
+                    }
+                }
+            }
+        }
     }
 }

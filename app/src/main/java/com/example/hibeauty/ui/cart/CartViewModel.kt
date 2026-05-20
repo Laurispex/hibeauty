@@ -6,6 +6,7 @@ import com.example.hibeauty.data.model.CartItem
 import com.example.hibeauty.data.repository.CartRepository
 import com.example.hibeauty.data.repository.OrderRepository
 import com.example.hibeauty.data.repository.ProductRepository
+import com.example.hibeauty.data.repository.UserRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +31,8 @@ sealed class CheckoutState {
 class CartViewModel(
     private val cartRepo: CartRepository = CartRepository(),
     private val productRepo: ProductRepository = ProductRepository(),
-    private val orderRepo: OrderRepository = OrderRepository()
+    private val orderRepo: OrderRepository = OrderRepository(),
+    private val userRepo: UserRepository = UserRepository()
 ) : ViewModel() {
 
     private val _cartState = MutableStateFlow<CartUiState>(CartUiState.Loading)
@@ -65,9 +67,20 @@ class CartViewModel(
         }
     }
 
-    fun checkout(userId: String, items: List<CartItem>, userName: String, userPhone: String, address: String) {
+    fun checkout(userId: String, items: List<CartItem>) {
         viewModelScope.launch {
             _checkoutState.value = CheckoutState.Loading
+            
+            val userRes = userRepo.getUserProfile(userId)
+            if (userRes.isFailure) {
+                _checkoutState.value = CheckoutState.Error("No se pudieron cargar tus datos")
+                return@launch
+            }
+            val user = userRes.getOrThrow()
+            val userName = user.name.ifBlank { "Cliente" }
+            val userPhone = user.phone
+            val address = user.address
+
             val db = FirebaseFirestore.getInstance()
             val batch = db.batch()
             val checkedItems = mutableListOf<CartItem>()

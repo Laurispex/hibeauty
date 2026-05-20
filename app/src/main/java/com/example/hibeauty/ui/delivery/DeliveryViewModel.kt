@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.hibeauty.data.model.Order
 import com.example.hibeauty.data.repository.OrderRepository
 import com.example.hibeauty.data.repository.UserRepository
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -55,14 +54,11 @@ class DeliveryViewModel(
 
     fun acceptOrder(order: Order) {
         val uid = userRepo.currentFirebaseUser?.uid ?: return
-        val db = FirebaseFirestore.getInstance()
         viewModelScope.launch {
-            runCatching {
-                val userDoc = db.collection("users").document(uid).get().await()
-                val riderName = userDoc.getString("name") ?: "Repartidor"
-                orderRepo.assignRider(order.id, uid, riderName)
-                orderRepo.updateStatus(order.id, "En camino", "Pedido en camino")
-            }
+            val userRes = userRepo.getUserProfile(uid)
+            val riderName = userRes.getOrNull()?.name ?: "Repartidor"
+            orderRepo.assignRider(order.id, uid, riderName)
+            orderRepo.updateStatus(order.id, "En camino", "Pedido en camino")
             load()
         }
     }
@@ -71,15 +67,14 @@ class DeliveryViewModel(
         val uid = userRepo.currentFirebaseUser?.uid ?: return
         viewModelScope.launch {
             orderRepo.updateStatus(orderId, "Entregado", "Pedido entregado")
-            runCatching {
-                val db = FirebaseFirestore.getInstance()
-                db.collection("users").document(uid).update(
-                    mapOf(
-                        "completedDeliveries" to com.google.firebase.firestore.FieldValue.increment(1),
-                        "earnings" to com.google.firebase.firestore.FieldValue.increment(8000L)
-                    )
-                ).await()
-            }
+            userRepo.addEarnings(uid, 8000L)
+            load()
+        }
+    }
+
+    fun markOnTheWay(orderId: String) {
+        viewModelScope.launch {
+            orderRepo.updateStatus(orderId, "En_camino", "Repartidor en camino a tu dirección")
             load()
         }
     }

@@ -1,5 +1,9 @@
 package com.example.hibeauty
 
+import com.example.hibeauty.data.model.Product
+import com.example.hibeauty.data.model.Order
+import com.example.hibeauty.data.model.CartItem
+import com.example.hibeauty.data.model.RoutineStep
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

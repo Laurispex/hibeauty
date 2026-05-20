@@ -26,6 +26,15 @@ class OrderRepository(
             .map { it.toOrder() }
     }
 
+    suspend fun getAllOrders(): Result<List<Order>> = runCatching {
+        collection
+            .orderBy("createdAtMillis", Query.Direction.DESCENDING)
+            .get()
+            .await()
+            .documents
+            .map { it.toOrder() }
+    }
+
     suspend fun getOrdersByStatus(status: String): Result<List<Order>> = runCatching {
         collection
             .whereEqualTo("status", status)

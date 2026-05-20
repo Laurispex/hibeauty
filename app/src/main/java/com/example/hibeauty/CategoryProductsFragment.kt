@@ -1,11 +1,20 @@
 package com.example.hibeauty
 
+import com.example.hibeauty.data.model.Product
+import com.example.hibeauty.data.model.Order
+import com.example.hibeauty.data.model.CartItem
+import com.example.hibeauty.data.model.RoutineStep
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.hibeauty.databinding.FragmentCategoryProductsBinding
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.hibeauty.ui.category.CategoryProductsViewModel
+import kotlinx.coroutines.launch
 
 class CategoryProductsFragment(
     private val category: String
@@ -14,31 +23,39 @@ class CategoryProductsFragment(
     private var _binding: FragmentCategoryProductsBinding? = null
     private val binding get() = _binding!!
 
-    private val db: FirebaseFirestore by lazy {
-        FirebaseFirestore.getInstance()
-    }
+    private val viewModel: CategoryProductsViewModel by viewModels()
 
     private val productAdapter = ProductAdapter { product ->
         (activity as? MainActivity)?.openProductDetail(product)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCategoryProductsBinding.bind(view)
 
         setupUI()
-
         setupTabs()
+        observeViewModel()
 
-        loadAllProducts()
+        viewModel.loadAllProducts(category)
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.products.collect { products ->
+                    productAdapter.submitList(products)
+                    val countText = "${products.size} productos"
+                    binding.categoryCount.text = countText
+                    binding.productsCountText.text = countText
+                }
+            }
+        }
     }
 
     private fun setupUI() {
-
         binding.categoryTitle.text = category
-
-        binding.bannerTitle.text =
-            "$category para ti"
+        binding.bannerTitle.text = "$category para ti"
 
         val iconRes = when (category) {
             "Skincare" -> R.drawable.ic_flower
@@ -48,172 +65,35 @@ class CategoryProductsFragment(
             else -> R.drawable.ic_crown
         }
         binding.bannerIcon.setImageResource(iconRes)
+        binding.bannerSubtitle.text = getBannerSubtitle()
 
-        binding.bannerSubtitle.text =
-            getBannerSubtitle()
-
-        binding.categoryRecyclerView.layoutManager =
-            GridLayoutManager(requireContext(), 2)
-
-        binding.categoryRecyclerView.adapter =
-            productAdapter
+        binding.categoryRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.categoryRecyclerView.adapter = productAdapter
 
         if (binding.categoryRecyclerView.itemDecorationCount == 0) {
-
-            binding.categoryRecyclerView.addItemDecoration(
-                GridSpacingItemDecoration(2, 24, true)
-            )
+            binding.categoryRecyclerView.addItemDecoration(GridSpacingItemDecoration(2, 24, true))
         }
 
-        binding.btnBack.setOnClickListener {
-
-            parentFragmentManager.popBackStack()
-        }
+        binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
     }
-
-    // TABS
 
     private fun setupTabs() {
-
-        binding.tabAll.setOnClickListener {
-            loadAllProducts()
-        }
-
-        binding.tabFeatured.setOnClickListener {
-            loadFeaturedProducts()
-        }
-
-        binding.tabNew.setOnClickListener {
-            loadNewProducts()
-        }
-
-        binding.tabOffers.setOnClickListener {
-            loadOfferProducts()
-        }
+        binding.tabAll.setOnClickListener { viewModel.loadAllProducts(category) }
+        binding.tabFeatured.setOnClickListener { viewModel.loadFeaturedProducts(category) }
+        binding.tabNew.setOnClickListener { viewModel.loadNewProducts(category) }
+        binding.tabOffers.setOnClickListener { viewModel.loadOfferProducts(category) }
     }
 
-    // TODOS
-
-    private fun loadAllProducts() {
-
-        db.collection("products")
-            .whereEqualTo("isActive", true)
-            .whereEqualTo("category", category)
-            .get()
-            .addOnSuccessListener { result ->
-
-                val products =
-                    result.documents.map {
-                        it.toProduct()
-                    }
-
-                updateProducts(products)
-            }
-    }
-
-    // BESTSELLERS
-
-    private fun loadFeaturedProducts() {
-
-        db.collection("products")
-            .whereEqualTo("isActive", true)
-            .whereEqualTo("category", category)
-            .whereEqualTo("isFeatured", true)
-            .get()
-            .addOnSuccessListener { result ->
-
-                val products =
-                    result.documents.map {
-                        it.toProduct()
-                    }
-
-                updateProducts(products)
-            }
-    }
-
-    // NUEVOS
-
-    private fun loadNewProducts() {
-
-        db.collection("products")
-            .whereEqualTo("isActive", true)
-            .whereEqualTo("category", category)
-            .whereEqualTo("isNew", true)
-            .get()
-            .addOnSuccessListener { result ->
-
-                val products =
-                    result.documents.map {
-                        it.toProduct()
-                    }
-
-                updateProducts(products)
-            }
-    }
-
-    // OFERTAS
-
-    private fun loadOfferProducts() {
-
-        db.collection("products")
-            .whereEqualTo("isActive", true)
-            .whereEqualTo("category", category)
-            .whereEqualTo("isOffer", true)
-            .get()
-            .addOnSuccessListener { result ->
-
-                val products =
-                    result.documents.map {
-                        it.toProduct()
-                    }
-
-                updateProducts(products)
-            }
-    }
-
-    // UPDATE UI
-
-    private fun updateProducts(products: List<Product>) {
-
-        productAdapter.submitList(products)
-
-        val countText =
-            "${products.size} productos"
-
-        binding.categoryCount.text =
-            countText
-
-        binding.productsCountText.text =
-            countText
-    }
-
-    // SUBTITLES
-
-    private fun getBannerSubtitle(): String {
-
-        return when (category) {
-
-            "Skincare" ->
-                "Productos seleccionados con amor para tu piel"
-
-            "Maquillaje" ->
-                "Brilla con los tonos perfectos para ti"
-
-            "Fragancias" ->
-                "Aromas únicos que enamoran"
-
-            "Bienestar" ->
-                "Momentos de paz y autocuidado"
-
-            else ->
-                "Descubre productos increíbles"
-        }
+    private fun getBannerSubtitle(): String = when (category) {
+        "Skincare" -> "Productos seleccionados con amor para tu piel"
+        "Maquillaje" -> "Brilla con los tonos perfectos para ti"
+        "Fragancias" -> "Aromas únicos que enamoran"
+        "Bienestar" -> "Momentos de paz y autocuidado"
+        else -> "Descubre productos increíbles"
     }
 
     override fun onDestroyView() {
-
         super.onDestroyView()
-
         _binding = null
     }
 }

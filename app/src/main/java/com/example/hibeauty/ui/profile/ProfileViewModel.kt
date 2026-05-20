@@ -109,4 +109,8 @@ class ProfileViewModel(
     }
 
     fun resetAuthAction() { _authAction.value = AuthAction.Idle }
+
+    /** Convenience for one-off reads in the Fragment (e.g. toast content). */
+    val currentPoints: Long
+        get() = (_profileState.value as? ProfileUiState.LoggedIn)?.user?.points ?: 0L
 }

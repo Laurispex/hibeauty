@@ -29,6 +29,10 @@ class CartRepository(
         cartRef(userId).document(itemId).delete().await()
     }
 
+    suspend fun addItemToCart(userId: String, data: Map<String, Any>): Result<Unit> = runCatching {
+        cartRef(userId).add(data).await()
+    }
+
     suspend fun clearCart(userId: String): Result<Unit> = runCatching {
         val items = cartRef(userId).get().await()
         val batch = db.batch()

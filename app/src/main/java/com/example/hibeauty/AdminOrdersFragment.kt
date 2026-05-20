@@ -1,5 +1,9 @@
 package com.example.hibeauty
 
+import com.example.hibeauty.data.model.Product
+import com.example.hibeauty.data.model.Order
+import com.example.hibeauty.data.model.CartItem
+import com.example.hibeauty.data.model.RoutineStep
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,325 +11,99 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hibeauty.databinding.FragmentAdminOrdersBinding
+import com.example.hibeauty.ui.store.orders.StoreOrdersUiState
+import com.example.hibeauty.ui.store.orders.StoreOrdersViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 class AdminOrdersFragment : Fragment() {
 
     private var _binding: FragmentAdminOrdersBinding? = null
-
     private val binding get() = _binding!!
 
-    private val db: FirebaseFirestore by lazy {
-        FirebaseFirestore.getInstance()
+    private val viewModel: StoreOrdersViewModel by viewModels()
+
+    private val orderAdapter = OrderAdapter(showStatusAction = true) { order ->
+        viewModel.advanceStatus(order)
     }
 
-    private val orderAdapter =
-        OrderAdapter(showStatusAction = true) { order ->
-            updateOrderStatus(order)
-        }
+    // ─── LIFECYCLE ─────────────────────────────────────────────────────────────
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
-        _binding =
-            FragmentAdminOrdersBinding.inflate(
-                inflater,
-                container,
-                false
-            )
-
+        _binding = FragmentAdminOrdersBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-
-        super.onViewCreated(
-            view,
-            savedInstanceState
-        )
-
-        binding.adminOrdersRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext())
-
-        binding.adminOrdersRecyclerView.adapter =
-            orderAdapter
-
-        // BACK BUTTON
-
-        binding.btnBackOrders.setOnClickListener {
-
-            parentFragmentManager.popBackStack()
-        }
-
-        loadOrders()
-    }
-
-    private fun loadOrders() {
-
-        binding.adminOrdersEmptyText.isVisible =
-            true
-
-        binding.adminOrdersEmptyText.text =
-            "Cargando pedidos..."
-
-        binding.adminOrdersRecyclerView.isVisible =
-            false
-
-        db.collection("orders")
-            .get()
-
-            .addOnSuccessListener { result ->
-
-                val orders =
-                    result.documents.map { document ->
-
-                        documentToOrder(
-                            document.id,
-                            document.data.orEmpty()
-                        )
-                    }
-
-                if (orders.isEmpty()) {
-
-                    binding.adminOrdersEmptyText.isVisible =
-                        true
-
-                    binding.adminOrdersEmptyText.text =
-                        "Todavía no hay pedidos."
-
-                    binding.adminOrdersRecyclerView.isVisible =
-                        false
-
-                    return@addOnSuccessListener
-                }
-
-                orderAdapter.submitList(orders)
-
-                binding.adminOrdersEmptyText.isVisible =
-                    false
-
-                binding.adminOrdersRecyclerView.isVisible =
-                    true
-            }
-
-            .addOnFailureListener {
-
-                binding.adminOrdersEmptyText.isVisible =
-                    true
-
-                binding.adminOrdersEmptyText.text =
-                    "No se pudieron cargar los pedidos."
-
-                binding.adminOrdersRecyclerView.isVisible =
-                    false
-            }
-    }
-
-    private fun updateOrderStatus(
-        order: Order
-    ) {
-
-        val nextStatus = when (order.status) {
-
-            "Pendiente" ->
-                "Preparando"
-
-            "Preparando" ->
-                "Listo"
-
-            "Listo" ->
-                "Domicilio Propio"
-
-            "Domicilio Propio" ->
-                "Entregado"
-
-            else -> null
-        }
-
-        if (nextStatus == null) {
-
-            toast("Este pedido ya está finalizado")
-
-            return
-        }
-
-        db.collection("orders")
-            .document(order.id)
-
-            .update(
-                mapOf(
-
-                    "status" to nextStatus,
-
-                    "statusLabel" to
-                            statusLabel(nextStatus),
-
-                    "statusUpdatedAt" to
-                            FieldValue.serverTimestamp(),
-
-                    "statusHistory" to
-                            FieldValue.arrayUnion(
-
-                                hashMapOf(
-
-                                    "status" to nextStatus,
-
-                                    "label" to
-                                            statusLabel(nextStatus),
-
-                                    "changedAtMillis" to
-                                            System.currentTimeMillis()
-                                )
-                            )
-                )
-            )
-
-            .addOnSuccessListener {
-
-                toast(
-                    "Pedido actualizado a $nextStatus"
-                )
-
-                loadOrders()
-            }
-
-            .addOnFailureListener {
-
-                toast(
-                    "No se pudo actualizar el pedido"
-                )
-            }
-    }
-
-    private fun documentToOrder(
-        documentId: String,
-        data: Map<String, Any>
-    ): Order {
-
-        val rawItems =
-            data["items"] as? List<*>
-                ?: emptyList<Any>()
-
-        val items =
-            rawItems.mapNotNull { rawItem ->
-
-                val item =
-                    rawItem as? Map<*, *>
-                        ?: return@mapNotNull null
-
-                OrderItem(
-
-                    name =
-                        item["name"] as? String
-                            ?: "",
-
-                    presentation =
-                        item["presentation"] as? String
-                            ?: "",
-
-                    quantity =
-                        (item["quantity"] as? Number)
-                            ?.toLong()
-                            ?: 0L,
-
-                    price =
-                        (item["price"] as? Number)
-                            ?.toLong()
-                            ?: 0L
-                )
-            }
-
-        return Order(
-
-            id =
-                data["id"] as? String
-                    ?: documentId,
-
-            userId =
-                data["userId"] as? String
-                    ?: "",
-
-            status =
-                data["status"] as? String
-                    ?: "Pendiente",
-
-            total =
-                (data["total"] as? Number)
-                    ?.toLong()
-                    ?: 0L,
-
-            items = items
-        )
-    }
-
-    private fun statusLabel(
-        status: String
-    ): String {
-
-        return when (status) {
-
-            "Preparando" ->
-                "Preparando tu compra"
-
-            "Listo" ->
-                "Listo para despacho"
-
-            "Domicilio Propio" ->
-                "En ruta directa de tienda"
-
-            "Entregado" ->
-                "Pedido entregado"
-
-            else ->
-                "Pedido recibido"
-        }
-    }
-
-    private fun toast(
-        message: String
-    ) {
-
-        Toast.makeText(
-            requireContext(),
-            message,
-            Toast.LENGTH_LONG
-        ).show()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.adminOrdersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.adminOrdersRecyclerView.adapter = orderAdapter
+        binding.btnBackOrders.setOnClickListener { parentFragmentManager.popBackStack() }
+        observeViewModel()
+        viewModel.load()
     }
 
     override fun onResume() {
         super.onResume()
-
-        activity
-            ?.findViewById<BottomNavigationView>(
-                R.id.bottom_navigation
-            )
-            ?.visibility = View.GONE
+        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.GONE
     }
 
     override fun onPause() {
         super.onPause()
-
-        activity
-            ?.findViewById<BottomNavigationView>(
-                R.id.bottom_navigation
-            )
-            ?.visibility = View.VISIBLE
+        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.VISIBLE
     }
 
-    override fun onDestroyView() {
+    override fun onDestroyView() { super.onDestroyView(); _binding = null }
 
-        super.onDestroyView()
+    // ─── OBSERVERS ─────────────────────────────────────────────────────────────
 
-        _binding = null
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is StoreOrdersUiState.Loading -> {
+                            binding.adminOrdersEmptyText.isVisible = true
+                            binding.adminOrdersEmptyText.text = "Cargando pedidos..."
+                            binding.adminOrdersRecyclerView.isVisible = false
+                        }
+                        is StoreOrdersUiState.Empty -> {
+                            binding.adminOrdersEmptyText.isVisible = true
+                            binding.adminOrdersEmptyText.text = "Todavía no hay pedidos."
+                            binding.adminOrdersRecyclerView.isVisible = false
+                        }
+                        is StoreOrdersUiState.Ready -> {
+                            orderAdapter.submitList(state.orders)
+                            binding.adminOrdersEmptyText.isVisible = false
+                            binding.adminOrdersRecyclerView.isVisible = true
+                        }
+                        is StoreOrdersUiState.Error -> {
+                            binding.adminOrdersEmptyText.isVisible = true
+                            binding.adminOrdersEmptyText.text = state.message
+                            binding.adminOrdersRecyclerView.isVisible = false
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.actionResult.collect { msg ->
+                    if (msg != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                        viewModel.clearActionResult()
+                    }
+                }
+            }
+        }
     }
 }

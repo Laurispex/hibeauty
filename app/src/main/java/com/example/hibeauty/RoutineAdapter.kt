@@ -1,5 +1,9 @@
 package com.example.hibeauty
 
+import com.example.hibeauty.data.model.Product
+import com.example.hibeauty.data.model.Order
+import com.example.hibeauty.data.model.CartItem
+import com.example.hibeauty.data.model.RoutineStep
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -48,10 +52,10 @@ class RoutineAdapter(
 
             binding.stepStatus.text =
 
-                if (step.completed)
+                if (step.isCompleted)
                     "✅"
                 else
-                    step.icon
+                    "⏳"
 
             // STEP NUMBER
 
@@ -61,7 +65,7 @@ class RoutineAdapter(
 
             // COMPLETED STATE
 
-            if (step.completed) {
+            if (step.isCompleted) {
 
                 binding.stepTitle.paintFlags =
                     Paint.STRIKE_THRU_TEXT_FLAG

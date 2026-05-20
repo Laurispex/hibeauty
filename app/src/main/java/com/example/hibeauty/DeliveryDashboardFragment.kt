@@ -1,5 +1,7 @@
 package com.example.hibeauty
 
+import com.example.hibeauty.data.model.Product
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,60 +11,46 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.hibeauty.data.model.Order
 import com.example.hibeauty.databinding.FragmentDeliveryDashboardBinding
+import com.example.hibeauty.ui.delivery.DeliveryUiState
+import com.example.hibeauty.ui.delivery.DeliveryViewModel
+import com.example.hibeauty.util.toCOP
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import java.text.NumberFormat
-import java.util.Locale
+import kotlinx.coroutines.launch
 
 class DeliveryDashboardFragment : Fragment() {
 
     private var _binding: FragmentDeliveryDashboardBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
+    private val viewModel: DeliveryViewModel by viewModels()
 
-    private var currentRiderName: String = "Repartidor"
-    private var currentRiderPhone: String = ""
-
-    private var activeDeliveryListener: ListenerRegistration? = null
-    private var availableOrdersListener: ListenerRegistration? = null
-    private var riderStatsListener: ListenerRegistration? = null
-
-    private var activeOrderDoc: DocumentSnapshot? = null
+    // ─── LIFECYCLE ─────────────────────────────────────────────────────────────
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDeliveryDashboardBinding.inflate(
-            inflater,
-            container,
-            false
-        )
+        _binding = FragmentDeliveryDashboardBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
-
         setupLogout()
-        loadRiderProfileAndStart()
+        setupAvailabilitySwitch()
+        observeViewModel()
+        viewModel.load()
     }
 
     override fun onResume() {
         super.onResume()
-        // Hide client navigation bar when in delivery dashboard for cleaner UX
         activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.GONE
     }
 
@@ -71,299 +59,152 @@ class DeliveryDashboardFragment : Fragment() {
         activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.VISIBLE
     }
 
-    private fun loadRiderProfileAndStart() {
-        val currentUser = auth.currentUser ?: return
-        
-        db.collection("users").document(currentUser.uid).get()
-            .addOnSuccessListener { doc ->
-                currentRiderName = doc.getString("name") ?: "Repartidor"
-                currentRiderPhone = doc.getString("phone") ?: ""
-                binding.deliveryWelcomeText.text = "¡Hola, $currentRiderName!"
-
-                // Start observing rider stats
-                observeRiderStats(currentUser.uid)
-
-                // Setup Availability Switch
-                binding.switchAvailability.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        binding.textAvailabilityStatus.text = "Estado: Conectado (Disponible)"
-                        startObservingDeliveries(currentUser.uid)
-                    } else {
-                        binding.textAvailabilityStatus.text = "Estado: Desconectado (Offline)"
-                        stopObservingDeliveries()
-                        binding.layoutEmptyDeliveries.visibility = View.VISIBLE
-                        binding.layoutAvailableDeliveries.visibility = View.GONE
-                        binding.cardActiveDelivery.visibility = View.GONE
-                    }
-                }
-
-                // Initial load
-                if (binding.switchAvailability.isChecked) {
-                    startObservingDeliveries(currentUser.uid)
-                }
-            }
-            .addOnFailureListener {
-                toast("Error cargando perfil de repartidor")
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
-    private fun observeRiderStats(riderUid: String) {
-        riderStatsListener?.remove()
-        riderStatsListener = db.collection("users").document(riderUid)
-            .addSnapshotListener { snapshot, _ ->
-                if (snapshot != null && snapshot.exists()) {
-                    val completed = snapshot.getLong("completedDeliveries") ?: 0L
-                    val earnings = snapshot.getLong("earnings") ?: 0L
+    // ─── OBSERVERS ─────────────────────────────────────────────────────────────
 
-                    binding.textCompletedDeliveries.text = completed.toString()
-                    binding.textTotalEarnings.text = earnings.toCOP()
-                }
-            }
-    }
-
-    private fun startObservingDeliveries(riderUid: String) {
-        stopObservingDeliveries()
-
-        // 1. Listen for active order assigned to this rider
-        activeDeliveryListener = db.collection("orders")
-            .whereEqualTo("riderId", riderUid)
-            .addSnapshotListener { snapshots, error ->
-                if (error != null) {
-                    return@addSnapshotListener
-                }
-
-                // Find active delivery (not delivered yet)
-                val activeOrder = snapshots?.documents?.find { doc ->
-                    val status = doc.getString("status")?.lowercase() ?: ""
-                    status != "entregado"
-                }
-
-                if (activeOrder != null) {
-                    activeOrderDoc = activeOrder
-                    showActiveDeliveryHUD(activeOrder)
-                } else {
-                    activeOrderDoc = null
-                    binding.cardActiveDelivery.visibility = View.GONE
-                    
-                    // If no active delivery, listen for available deliveries in region
-                    observeAvailableOrders()
-                }
-            }
-    }
-
-    private fun observeAvailableOrders() {
-        availableOrdersListener?.remove()
-        // Listen to orders preparing or ready, but not yet accepted by any rider
-        availableOrdersListener = db.collection("orders")
-            .whereIn("status", listOf("Preparando", "Listo para recoger", "Listo"))
-            .addSnapshotListener { snapshots, error ->
-                if (error != null) {
-                    return@addSnapshotListener
-                }
-
-                val availableOrders = snapshots?.documents?.filter { doc ->
-                    doc.getString("riderId") == null
-                }?.sortedBy { doc ->
-                    calculateSimulatedTime(doc.id, 1)
-                } ?: emptyList()
-
-                binding.containerAvailableOrders.removeAllViews()
-
-                if (availableOrders.isEmpty()) {
-                    binding.layoutEmptyDeliveries.visibility = View.VISIBLE
-                    binding.layoutAvailableDeliveries.visibility = View.GONE
-                } else {
-                    binding.layoutEmptyDeliveries.visibility = View.GONE
-                    binding.layoutAvailableDeliveries.visibility = View.VISIBLE
-
-                    availableOrders.forEach { doc ->
-                        inflateAvailableOrderCard(doc)
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is DeliveryUiState.Loading -> showLoading()
+                        is DeliveryUiState.Ready   -> renderState(state)
+                        is DeliveryUiState.Error   -> toast(state.message)
                     }
                 }
             }
+        }
     }
 
-    private fun inflateAvailableOrderCard(doc: DocumentSnapshot) {
-        val layout = LayoutInflater.from(requireContext()).inflate(
-            R.layout.item_delivery_order,
-            binding.containerAvailableOrders,
-            false
-        )
+    // ─── UI STATES ─────────────────────────────────────────────────────────────
 
-        layout.findViewById<TextView>(R.id.orderIdText).text = "#BT-${doc.id.take(6).uppercase()}"
-        
-        val shipping = doc.getLong("shipping") ?: 8000L
-        layout.findViewById<TextView>(R.id.payoutText).text = "Pago: ${shipping.toCOP()}"
-        
-        val address = doc.getString("address") ?: "Dirección no especificada"
-        layout.findViewById<TextView>(R.id.destinationAddressText).text = address
+    private fun showLoading() {
+        binding.deliveryWelcomeText.text = "Cargando..."
+        binding.textCompletedDeliveries.text = "-"
+        binding.textTotalEarnings.text = "-"
+    }
 
-        // Calculated times
-        val timeToStore = calculateSimulatedTime(doc.id, 1)
-        val timeToClient = calculateSimulatedTime(doc.id, 2)
+    private fun renderState(state: DeliveryUiState.Ready) {
+        val b = _binding ?: return
 
+        b.deliveryWelcomeText.text = "¡Hola, ${state.welcomeName}!"
+        b.textCompletedDeliveries.text = state.completedDeliveries.toString()
+        b.textTotalEarnings.text = state.earnings.toCOP()
+
+        if (state.activeOrder != null) {
+            showActiveDeliveryHUD(state.activeOrder)
+        } else {
+            b.cardActiveDelivery.isVisible = false
+            renderAvailableOrders(state.availableOrders)
+        }
+    }
+
+    private fun renderAvailableOrders(orders: List<Order>) {
+        val b = _binding ?: return
+        b.containerAvailableOrders.removeAllViews()
+
+        if (orders.isEmpty()) {
+            b.layoutEmptyDeliveries.isVisible = true
+            b.layoutAvailableDeliveries.isVisible = false
+        } else {
+            b.layoutEmptyDeliveries.isVisible = false
+            b.layoutAvailableDeliveries.isVisible = true
+            orders.forEach { order -> inflateOrderCard(order) }
+        }
+    }
+
+    private fun showActiveDeliveryHUD(order: Order) {
+        val b = _binding ?: return
+        b.layoutEmptyDeliveries.isVisible = false
+        b.layoutAvailableDeliveries.isVisible = false
+        b.cardActiveDelivery.isVisible = true
+
+        b.activeOrderId.text = "#BT-${order.id.take(6).uppercase()}"
+        b.activeClientName.text = order.userName.ifBlank { "Cliente HiBeauty" }
+        b.activeClientAddress.text = order.address.ifBlank { "Dirección de entrega" }
+        b.activeClientPhone.text = "Teléfono: ${order.userPhone}"
+
+        val itemsSummary = order.items.joinToString { "${it.quantity}x ${it.name}" }
+            .ifBlank { "Productos de Belleza" }
+        b.activeOrderItemsSummary.text = "Productos: $itemsSummary"
+
+        val isOnTheWay = order.status.lowercase().contains("camino")
+        b.btnUpdateDeliveryStatus.text =
+            if (isOnTheWay) "Marcar como Entregado" else "Marcar como En Camino"
+        b.btnUpdateDeliveryStatus.setOnClickListener {
+            if (isOnTheWay) viewModel.markDelivered(order.id)
+            else viewModel.markOnTheWay(order.id)
+        }
+
+        b.btnCallClient.setOnClickListener {
+            val phone = order.userPhone
+            if (phone.isNotEmpty()) {
+                startActivity(Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$phone") })
+            } else {
+                toast("El cliente no registró número de teléfono")
+            }
+        }
+    }
+
+    private fun inflateOrderCard(order: Order) {
+        val b = _binding ?: return
+        val layout = LayoutInflater.from(requireContext())
+            .inflate(R.layout.item_delivery_order, b.containerAvailableOrders, false)
+
+        layout.findViewById<TextView>(R.id.orderIdText).text = "#BT-${order.id.take(6).uppercase()}"
+        layout.findViewById<TextView>(R.id.payoutText).text = "Pago: ${order.shipping.toCOP()}"
+        layout.findViewById<TextView>(R.id.destinationAddressText).text =
+            order.address.ifBlank { "Dirección no especificada" }
+
+        val timeToStore = calculateSimulatedTime(order.id, 1)
+        val timeToClient = calculateSimulatedTime(order.id, 2)
         layout.findViewById<TextView>(R.id.timeToStoreText).text = "Tiempo a tienda: $timeToStore min"
         layout.findViewById<TextView>(R.id.timeToClientText).text = "Tiempo al cliente: $timeToClient min"
 
-        // Summarize items
-        val itemsList = doc.get("items") as? List<Map<*, *>>
-        val itemsSummary = itemsList?.joinToString { item ->
-            val qty = item["quantity"] ?: 1
-            val name = item["name"] ?: "Producto"
-            "${qty}x $name"
-        } ?: "Productos de Belleza"
-        layout.findViewById<TextView>(R.id.itemsSummaryText).text = "Productos: $itemsSummary"
+        val summary = order.items.joinToString { "${it.quantity}x ${it.name}" }.ifBlank { "Productos de Belleza" }
+        layout.findViewById<TextView>(R.id.itemsSummaryText).text = "Productos: $summary"
 
-        // Accept Button
         layout.findViewById<Button>(R.id.btnAcceptOrder).setOnClickListener {
-            acceptOrder(doc.id)
+            viewModel.acceptOrder(order)
         }
-
-        binding.containerAvailableOrders.addView(layout)
+        b.containerAvailableOrders.addView(layout)
     }
 
-    private fun acceptOrder(orderId: String) {
-        val riderUid = auth.currentUser?.uid ?: return
-        
-        val updates = hashMapOf(
-            "status" to "Aceptado",
-            "statusLabel" to "Repartidor en camino a la tienda",
-            "riderId" to riderUid,
-            "riderName" to currentRiderName,
-            "riderPhone" to currentRiderPhone,
-            "statusUpdatedAt" to FieldValue.serverTimestamp()
-        )
+    // ─── SETUP ─────────────────────────────────────────────────────────────────
 
-        db.collection("orders").document(orderId).update(updates as Map<String, Any>)
-            .addOnSuccessListener {
-                toast("¡Pedido aceptado! Dirígete a la tienda")
-            }
-            .addOnFailureListener {
-                toast("Error al aceptar pedido")
-            }
-    }
-
-    private fun showActiveDeliveryHUD(doc: DocumentSnapshot) {
-        binding.layoutEmptyDeliveries.visibility = View.GONE
-        binding.layoutAvailableDeliveries.visibility = View.GONE
-        binding.cardActiveDelivery.visibility = View.VISIBLE
-
-        binding.activeOrderId.text = "#BT-${doc.id.take(6).uppercase()}"
-        binding.activeClientName.text = doc.getString("userName") ?: "Cliente HiBeauty"
-        binding.activeClientAddress.text = doc.getString("address") ?: "Dirección de entrega"
-        
-        val phone = doc.getString("userPhone") ?: ""
-        binding.activeClientPhone.text = "Teléfono: $phone"
-
-        // Summarize items
-        val itemsList = doc.get("items") as? List<Map<*, *>>
-        val itemsSummary = itemsList?.joinToString { item ->
-            val qty = item["quantity"] ?: 1
-            val name = item["name"] ?: "Producto"
-            "${qty}x $name"
-        } ?: "Productos de Belleza"
-        binding.activeOrderItemsSummary.text = "Productos: $itemsSummary"
-
-        val status = doc.getString("status")?.lowercase() ?: ""
-        
-        if (status == "en_camino") {
-            binding.btnUpdateDeliveryStatus.text = "Marcar como Entregado"
-            binding.btnUpdateDeliveryStatus.setOnClickListener {
-                markAsDelivered(doc)
-            }
-        } else {
-            binding.btnUpdateDeliveryStatus.text = "Marcar como En Camino"
-            binding.btnUpdateDeliveryStatus.setOnClickListener {
-                markAsOnTheWay(doc.id)
+    private fun setupAvailabilitySwitch() {
+        binding.switchAvailability.setOnCheckedChangeListener { _, isChecked ->
+            binding.textAvailabilityStatus.text =
+                if (isChecked) "Estado: Conectado (Disponible)" else "Estado: Desconectado (Offline)"
+            if (isChecked) viewModel.load() else {
+                binding.layoutEmptyDeliveries.isVisible = true
+                binding.layoutAvailableDeliveries.isVisible = false
+                binding.cardActiveDelivery.isVisible = false
             }
         }
-
-        // Call Button
-        binding.btnCallClient.setOnClickListener {
-            if (phone.isNotEmpty()) {
-                val intent = Intent(Intent.ACTION_DIAL).apply {
-                    data = Uri.parse("tel:$phone")
-                }
-                startActivity(intent)
-            } else {
-                toast("El cliente no registró número telefónico")
-            }
-        }
-    }
-
-    private fun markAsOnTheWay(orderId: String) {
-        val updates = hashMapOf(
-            "status" to "En_camino",
-            "statusLabel" to "Repartidor en camino a tu dirección",
-            "statusUpdatedAt" to FieldValue.serverTimestamp()
-        )
-
-        db.collection("orders").document(orderId).update(updates as Map<String, Any>)
-            .addOnSuccessListener {
-                toast("¡Vas en camino! Conduce con cuidado")
-            }
-            .addOnFailureListener {
-                toast("Error al actualizar estado")
-            }
-    }
-
-    private fun markAsDelivered(doc: DocumentSnapshot) {
-        val riderUid = auth.currentUser?.uid ?: return
-        val orderId = doc.id
-        val shippingFee = doc.getLong("shipping") ?: 8000L
-
-        val batch = db.batch()
-
-        // 1. Update order status
-        val orderRef = db.collection("orders").document(orderId)
-        batch.update(orderRef, "status", "Entregado")
-        batch.update(orderRef, "statusLabel", "Entregado con éxito")
-        batch.update(orderRef, "statusUpdatedAt", FieldValue.serverTimestamp())
-
-        // 2. Increment completed deliveries and add earnings to rider user document
-        val riderRef = db.collection("users").document(riderUid)
-        batch.update(riderRef, "completedDeliveries", FieldValue.increment(1))
-        batch.update(riderRef, "earnings", FieldValue.increment(shippingFee))
-
-        batch.commit()
-            .addOnSuccessListener {
-                toast("¡Pedido entregado con éxito! +${shippingFee.toCOP()} agregados a tus ganancias 💸")
-            }
-            .addOnFailureListener {
-                toast("Error al finalizar entrega")
-            }
-    }
-
-    private fun stopObservingDeliveries() {
-        activeDeliveryListener?.remove()
-        activeDeliveryListener = null
-        availableOrdersListener?.remove()
-        availableOrdersListener = null
     }
 
     private fun setupLogout() {
         binding.btnLogoutDelivery.setOnClickListener {
-            auth.signOut()
+            com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
             toast("Sesión cerrada")
-            val mainActivity = requireActivity() as? MainActivity
-            mainActivity?.showUserNavigation()
-            mainActivity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.selectedItemId = R.id.nav_home
+            val main = requireActivity() as? MainActivity
+            main?.showUserNavigation()
+            main?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+                ?.selectedItemId = R.id.nav_home
         }
     }
 
-    private fun toast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
+    // ─── HELPERS ───────────────────────────────────────────────────────────────
 
-    private fun calculateSimulatedTime(id: String, salt: Int): Int {
-        // Generates a consistent pseudo-random time between 5 and 30 minutes based on the order ID
-        return kotlin.math.abs((id.hashCode() + salt) % 26) + 5
-    }
+    /** Deterministic pseudo-random time (5–30 min) based on order ID. */
+    private fun calculateSimulatedTime(id: String, salt: Int): Int =
+        kotlin.math.abs((id.hashCode() + salt) % 26) + 5
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        stopObservingDeliveries()
-        riderStatsListener?.remove()
-        _binding = null
-    }
+    private fun toast(msg: String) =
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
 }

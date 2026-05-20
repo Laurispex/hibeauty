@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hibeauty.data.model.Product
 import com.example.hibeauty.data.repository.ProductRepository
+import com.example.hibeauty.data.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,13 +16,29 @@ sealed class HomeUiState {
 }
 
 class HomeViewModel(
-    private val productRepo: ProductRepository = ProductRepository()
+    private val productRepo: ProductRepository = ProductRepository(),
+    private val userRepo: UserRepository = UserRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val uiState: StateFlow<HomeUiState> = _uiState
 
-    init { loadProducts() }
+    private val _greeting = MutableStateFlow("Descubre tu rutina ideal")
+    val greeting: StateFlow<String> = _greeting
+
+    init {
+        loadGreeting()
+        loadProducts()
+    }
+
+    private fun loadGreeting() {
+        val uid = userRepo.currentFirebaseUser?.uid ?: return
+        viewModelScope.launch {
+            userRepo.getUserProfile(uid).onSuccess { user ->
+                _greeting.value = if (user.name.isNotBlank()) "Hola, ${user.name}" else "Descubre tu rutina ideal"
+            }
+        }
+    }
 
     fun loadProducts() {
         viewModelScope.launch {

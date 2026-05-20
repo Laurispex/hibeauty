@@ -1,438 +1,188 @@
 package com.example.hibeauty
 
+import com.example.hibeauty.data.model.Product
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.hibeauty.data.model.Order
 import com.example.hibeauty.databinding.FragmentAdminDashboardBinding
+import com.example.hibeauty.ui.store.dashboard.StoreDashboardData
+import com.example.hibeauty.ui.store.dashboard.StoreDashboardViewModel
+import com.example.hibeauty.util.toCOP
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import java.text.NumberFormat
-import java.util.Locale
+import kotlinx.coroutines.launch
 
 class AdminDashboardFragment : Fragment() {
 
     private var _binding: FragmentAdminDashboardBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
+    private val viewModel: StoreDashboardViewModel by viewModels()
+
+    // ─── LIFECYCLE ─────────────────────────────────────────────────────────────
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
-        _binding =
-            FragmentAdminDashboardBinding.inflate(
-                inflater,
-                container,
-                false
-            )
-
+        _binding = FragmentAdminDashboardBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-
-        super.onViewCreated(
-            view,
-            savedInstanceState
-        )
-
-        auth = FirebaseAuth.getInstance()
-
-        firestore = FirebaseFirestore.getInstance()
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupQuickActions()
-
         setupLogout()
-
-        loadDashboardData()
+        observeViewModel()
+        viewModel.load()
     }
 
     override fun onResume() {
         super.onResume()
-
-        activity
-            ?.findViewById<BottomNavigationView>(
-                R.id.bottom_navigation
-            )
-            ?.visibility = View.GONE
+        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.GONE
     }
 
     override fun onPause() {
         super.onPause()
-
-        activity
-            ?.findViewById<BottomNavigationView>(
-                R.id.bottom_navigation
-            )
-            ?.visibility = View.VISIBLE
+        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.VISIBLE
     }
 
-    private fun loadDashboardData() {
-
-        loadAdminGreeting()
-
-        loadProducts()
-
-        loadOrders()
-
-        loadUsers()
-
-        loadLowStock()
-
-        loadRecentOrders()
-
-        loadTopProducts()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
-    private fun loadAdminGreeting() {
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            firestore.collection("users")
-                .document(currentUser.uid)
-                .get()
-                .addOnSuccessListener { document ->
-                    val name = document.getString("name") ?: "Administrador"
-                    binding.adminWelcomeText.text = "¡Hola, $name!"
+    // ─── OBSERVERS ─────────────────────────────────────────────────────────────
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { loading ->
+                    // Could show a progress bar here if needed
                 }
-                .addOnFailureListener {
-                    binding.adminWelcomeText.text = "¡Hola, Administrador!"
-                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.data.collect { data -> renderDashboard(data) }
+            }
+        }
+    }
+
+    // ─── RENDER ────────────────────────────────────────────────────────────────
+
+    private fun renderDashboard(data: StoreDashboardData) {
+        val b = _binding ?: return
+
+        b.adminWelcomeText.text = "¡Hola, ${data.welcomeName}!"
+        b.adminSales.text = data.totalSales.toCOP()
+        b.adminSalesGrowth.text = "+${(data.ordersCount * 0.1).toInt()}%"
+        b.adminOrdersCount.text = data.ordersCount.toString()
+        b.adminOrdersGrowth.text = "+${(data.ordersCount * 0.1).toInt()}%"
+        b.adminUsersCount.text = data.usersCount.toString()
+        b.adminUsersGrowth.text = "+${(data.usersCount * 0.05).toInt()}%"
+        b.adminProductsCount.text = data.productsCount.toString()
+        b.adminProductsGrowth.text = "+${data.productsCount}"
+
+        // Low-stock alert
+        val warning = data.lowStockWarning
+        if (warning != null) {
+            b.adminLowStockText.text = warning
+            b.alertStock.isVisible = true
         } else {
-            binding.adminWelcomeText.text = "¡Hola, Administrador!"
+            b.alertStock.isVisible = false
+        }
+
+        // Recent orders
+        b.containerRecentOrders.removeAllViews()
+        data.recentOrders.forEach { order -> addOrderView(order) }
+
+        // Top products
+        b.containerTopProducts.removeAllViews()
+        data.topProducts.forEach { product ->
+            val layout = LayoutInflater.from(requireContext())
+                .inflate(R.layout.item_top_product_admin, b.containerTopProducts, false)
+            layout.findViewById<TextView>(R.id.productName).text = product.name
+            val totalStock = product.presentations.values.sumOf { it.stock }
+            layout.findViewById<TextView>(R.id.productSales).text = "$totalStock en stock"
+            val revenue = product.presentations.values.sumOf { it.price * it.stock }
+            layout.findViewById<TextView>(R.id.productAmount).text = revenue.toCOP()
+            b.containerTopProducts.addView(layout)
         }
     }
 
-    private fun loadProducts() {
+    private fun addOrderView(order: Order) {
+        val b = _binding ?: return
+        val layout = LayoutInflater.from(requireContext())
+            .inflate(R.layout.item_recent_order_admin, b.containerRecentOrders, false)
 
-        firestore.collection("products")
-            .get()
+        layout.findViewById<TextView>(R.id.orderId).text = "#BT-${order.id.take(6).uppercase()}"
+        layout.findViewById<TextView>(R.id.orderUser).text = order.userName.ifBlank { "Cliente" }
+        layout.findViewById<TextView>(R.id.orderAmount).text = order.total.toCOP()
+        layout.findViewById<TextView>(R.id.orderTime).text = formatElapsed(order.createdAtMillis)
 
-            .addOnSuccessListener { result ->
-
-                val total = result.size()
-
-                binding.adminProductsCount.text =
-                    total.toString()
-
-                binding.adminProductsGrowth.text =
-                    "+$total"
+        val statusView = layout.findViewById<TextView>(R.id.orderStatus)
+        statusView.text = order.statusLabel.ifBlank { order.status }
+        statusView.setBackgroundResource(
+            when (order.status.lowercase()) {
+                "entregado" -> R.drawable.bg_status_green
+                "preparando" -> R.drawable.bg_status_yellow
+                else -> R.drawable.bg_status_blue
             }
+        )
+        b.containerRecentOrders.addView(layout)
     }
 
-    private fun loadOrders() {
-
-        firestore.collection("orders")
-            .get()
-
-            .addOnSuccessListener { result ->
-
-                val totalOrders =
-                    result.size()
-
-                binding.adminOrdersCount.text =
-                    totalOrders.toString()
-
-                binding.adminOrdersGrowth.text =
-                    "+${(totalOrders * 0.1).toInt()}%"
-
-                var totalSales = 0L
-
-                for (doc in result.documents) {
-
-                    totalSales +=
-                        doc.getLong("total")
-                            ?: 0L
-                }
-
-                binding.adminSales.text =
-                    totalSales.toCOP()
-
-                binding.adminSalesGrowth.text =
-                    "+12%"
-            }
-    }
-
-    private fun loadUsers() {
-
-        firestore.collection("users")
-            .get()
-
-            .addOnSuccessListener { result ->
-
-                val total =
-                    result.size()
-
-                binding.adminUsersCount.text =
-                    total.toString()
-
-                binding.adminUsersGrowth.text =
-                    "+${(total * 0.05).toInt()}%"
-            }
-    }
-
-    private fun loadLowStock() {
-
-        firestore.collection("products")
-            .get()
-
-            .addOnSuccessListener { result ->
-
-                for (doc in result.documents) {
-
-                    val presentations =
-                        doc.get("presentations")
-                                as? Map<*, *>
-
-                    presentations?.forEach { (_, value) ->
-
-                        val p =
-                            value as? Map<*, *>
-
-                        val stock =
-                            p?.get("stock")
-                                .toString()
-                                .toIntOrNull()
-                                ?: 0
-
-                        if (stock <= 8) {
-
-                            val name =
-                                doc.getString("name")
-                                    ?: "Producto"
-
-                            binding.adminLowStockText.text =
-                                "Stock bajo: $name ($stock unidades)"
-
-                            binding.alertStock.visibility =
-                                View.VISIBLE
-
-                            return@addOnSuccessListener
-                        }
-                    }
-                }
-            }
-    }
-
-    private fun loadRecentOrders() {
-
-        firestore.collection("orders")
-            .orderBy(
-                "timestamp",
-                Query.Direction.DESCENDING
-            )
-            .limit(3)
-            .get()
-
-            .addOnSuccessListener { result ->
-
-                binding.containerRecentOrders
-                    .removeAllViews()
-
-                for (doc in result.documents) {
-
-                    addOrderView(doc)
-                }
-            }
-    }
-
-    private fun addOrderView(
-        doc: com.google.firebase.firestore.DocumentSnapshot
-    ) {
-
-        val layout =
-            LayoutInflater.from(requireContext())
-                .inflate(
-                    R.layout.item_recent_order_admin,
-                    binding.containerRecentOrders,
-                    false
-                )
-
-        layout.findViewById<TextView>(R.id.orderId).text =
-            "#BT-${doc.id.take(6).uppercase()}"
-
-        layout.findViewById<TextView>(R.id.orderUser).text =
-            doc.getString("userName")
-                ?: "Cliente"
-
-        val total =
-            doc.getLong("total")
-                ?: 0L
-
-        layout.findViewById<TextView>(R.id.orderAmount).text =
-            NumberFormat
-                .getCurrencyInstance(
-                    Locale("es", "CO")
-                )
-                .format(total)
-
-        val status =
-            doc.getString("status")
-                ?: "Pendiente"
-
-        val statusText =
-            layout.findViewById<TextView>(
-                R.id.orderStatus
-            )
-
-        statusText.text = status
-
-        when (status.lowercase()) {
-
-            "entregado" ->
-                statusText.setBackgroundResource(
-                    R.drawable.bg_status_green
-                )
-
-            "preparando" ->
-                statusText.setBackgroundResource(
-                    R.drawable.bg_status_yellow
-                )
-
-            else ->
-                statusText.setBackgroundResource(
-                    R.drawable.bg_status_blue
-                )
+    private fun formatElapsed(millis: Long): String {
+        if (millis == 0L) return "Reciente"
+        val diff = System.currentTimeMillis() - millis
+        val minutes = diff / 60_000
+        return when {
+            minutes < 1    -> "Hace un momento"
+            minutes < 60   -> "Hace ${minutes} min"
+            minutes < 1440 -> "Hace ${minutes / 60}h"
+            else           -> "Hace ${minutes / 1440}d"
         }
-
-        binding.containerRecentOrders
-            .addView(layout)
     }
 
-    private fun loadTopProducts() {
-
-        firestore.collection("products")
-            .orderBy(
-                "salesCount",
-                Query.Direction.DESCENDING
-            )
-            .limit(3)
-            .get()
-
-            .addOnSuccessListener { result ->
-
-                binding.containerTopProducts
-                    .removeAllViews()
-
-                for (doc in result.documents) {
-
-                    addProductView(doc)
-                }
-            }
-    }
-
-    private fun addProductView(
-        doc: com.google.firebase.firestore.DocumentSnapshot
-    ) {
-
-        val layout =
-            LayoutInflater.from(requireContext())
-                .inflate(
-                    R.layout.item_top_product_admin,
-                    binding.containerTopProducts,
-                    false
-                )
-
-        layout.findViewById<TextView>(R.id.productName).text =
-            doc.getString("name")
-                ?: "Producto"
-
-        val sales =
-            doc.getLong("salesCount")
-                ?: 0L
-
-        layout.findViewById<TextView>(R.id.productSales).text =
-            "$sales ventas"
-
-        val revenue =
-            sales * 45000
-
-        layout.findViewById<TextView>(R.id.productAmount).text =
-            "$${revenue / 1000000.0}M"
-
-        layout.findViewById<TextView>(R.id.productRating).text =
-            "4.8"
-
-        binding.containerTopProducts
-            .addView(layout)
-    }
+    // ─── ACTIONS ───────────────────────────────────────────────────────────────
 
     private fun setupQuickActions() {
-
         binding.btnInventory.setOnClickListener {
-
-            parentFragmentManager
-                .beginTransaction()
-                .replace(
-                    R.id.fragment_container,
-                    AdminInventoryFragment()
-                )
-                .addToBackStack(null)
-                .commit()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AdminInventoryFragment())
+                .addToBackStack(null).commit()
         }
-
         binding.btnOrders.setOnClickListener {
-
-            parentFragmentManager
-                .beginTransaction()
-                .replace(
-                    R.id.fragment_container,
-                    AdminOrdersFragment()
-                )
-                .addToBackStack(null)
-                .commit()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AdminOrdersFragment())
+                .addToBackStack(null).commit()
         }
-
-
-
         binding.btnViewAllOrders.setOnClickListener {
-
-            parentFragmentManager
-                .beginTransaction()
-                .replace(
-                    R.id.fragment_container,
-                    AdminOrdersFragment()
-                )
-                .addToBackStack(null)
-                .commit()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AdminOrdersFragment())
+                .addToBackStack(null).commit()
         }
     }
 
     private fun setupLogout() {
-
-        binding.btnLogoutAdmin
-            .setOnClickListener {
-
-                auth.signOut()
-
-                Toast.makeText(
-                    requireContext(),
-                    "Sesión cerrada con éxito",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                val mainActivity = requireActivity() as? MainActivity
-                mainActivity?.showUserNavigation()
-                mainActivity?.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottom_navigation)?.selectedItemId = R.id.nav_home
-            }
-    }
-
-    override fun onDestroyView() {
-
-        super.onDestroyView()
-
-        _binding = null
+        binding.btnLogoutAdmin.setOnClickListener {
+            viewModel.logout()
+            Toast.makeText(requireContext(), "Sesión cerrada", Toast.LENGTH_SHORT).show()
+            val main = requireActivity() as? MainActivity
+            main?.showUserNavigation()
+            main?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+                ?.selectedItemId = R.id.nav_home
+        }
     }
 }

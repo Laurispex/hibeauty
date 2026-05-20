@@ -3,6 +3,7 @@ package com.example.hibeauty.data.repository
 import com.example.hibeauty.data.mapper.toUser
 import com.example.hibeauty.data.model.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -42,4 +43,13 @@ class UserRepository(
         runCatching {
             db.collection("users").document(uid).update(data).await()
         }
+
+    suspend fun addEarnings(uid: String, amount: Long): Result<Unit> = runCatching {
+        db.collection("users").document(uid).update(
+            mapOf(
+                "completedDeliveries" to FieldValue.increment(1),
+                "earnings" to FieldValue.increment(amount)
+            )
+        ).await()
+    }
 }
