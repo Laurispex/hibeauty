@@ -27,13 +27,18 @@ class AdminInventoryFragment : Fragment() {
 
     private val viewModel: StoreInventoryViewModel by viewModels()
 
-    private val productAdapter = AdminProductAdapter { product ->
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, AdminPublishFragment().apply {
-                arguments = Bundle().apply { putString("product_id", product.id) }
-            })
-            .addToBackStack(null).commit()
-    }
+    private val productAdapter = AdminProductAdapter(
+        onEditProduct = { product ->
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AdminPublishFragment().apply {
+                    arguments = Bundle().apply { putString("product_id", product.id) }
+                })
+                .addToBackStack(null).commit()
+        },
+        onDeleteProduct = { product ->
+            viewModel.deleteProduct(product.id)
+        }
+    )
 
     // ─── LIFECYCLE ─────────────────────────────────────────────────────────────
 

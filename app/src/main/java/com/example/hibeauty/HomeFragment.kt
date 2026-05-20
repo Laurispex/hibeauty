@@ -72,7 +72,9 @@ class HomeFragment : Fragment() {
             (activity as? MainActivity)?.openRoutine()
         }
         binding.quickOrdersCard.root.setOnClickListener {
-            (activity as? MainActivity)?.openProfile()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, UserOrdersFragment())
+                .addToBackStack(null).commit()
         }
         binding.btnOpenGuide.setOnClickListener {
             parentFragmentManager.beginTransaction()

@@ -13,9 +13,8 @@ import org.json.JSONObject
 
 class ImageRepository(private val context: Context) {
 
-    // Replace with your actual Cloudinary credentials
-    private val cloudName = "YOUR_CLOUD_NAME"
-    private val uploadPreset = "YOUR_UPLOAD_PRESET"
+    private val cloudName = "dswicy00p"
+    private val uploadPreset = "hibeauty"
 
     suspend fun uploadImage(imageUri: Uri): Result<String> = withContext(Dispatchers.IO) {
         runCatching {

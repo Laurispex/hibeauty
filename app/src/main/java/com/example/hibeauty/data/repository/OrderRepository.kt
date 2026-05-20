@@ -19,11 +19,11 @@ class OrderRepository(
     suspend fun getOrdersByUser(userId: String): Result<List<Order>> = runCatching {
         collection
             .whereEqualTo("userId", userId)
-            .orderBy("createdAtMillis", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents
             .map { it.toOrder() }
+            .sortedByDescending { it.createdAtMillis }
     }
 
     suspend fun getAllOrders(): Result<List<Order>> = runCatching {
@@ -38,11 +38,11 @@ class OrderRepository(
     suspend fun getOrdersByStatus(status: String): Result<List<Order>> = runCatching {
         collection
             .whereEqualTo("status", status)
-            .orderBy("createdAtMillis", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents
             .map { it.toOrder() }
+            .sortedByDescending { it.createdAtMillis }
     }
 
     suspend fun getRecentOrders(limit: Long = 5): Result<List<Order>> = runCatching {
@@ -58,11 +58,11 @@ class OrderRepository(
     suspend fun getOrdersReadyForDelivery(): Result<List<Order>> = runCatching {
         collection
             .whereEqualTo("status", "Listo")
-            .orderBy("createdAtMillis", Query.Direction.ASCENDING)
             .get()
             .await()
             .documents
             .map { it.toOrder() }
+            .sortedBy { it.createdAtMillis }
     }
 
     // ─── WRITE ─────────────────────────────────────────────────────────────────

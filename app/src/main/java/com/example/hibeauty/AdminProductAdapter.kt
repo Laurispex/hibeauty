@@ -11,18 +11,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.hibeauty.databinding.ItemAdminProductBinding
-import com.google.firebase.firestore.FirebaseFirestore
-
 class AdminProductAdapter(
-    private val onEditProduct: (Product) -> Unit
+    private val onEditProduct: (Product) -> Unit,
+    private val onDeleteProduct: (Product) -> Unit
 ) :
     RecyclerView.Adapter<AdminProductAdapter.AdminProductViewHolder>() {
 
     private val products =
         mutableListOf<Product>()
-
-    private val db =
-        FirebaseFirestore.getInstance()
 
     fun submitList(
         newProducts: List<Product>
@@ -121,7 +117,7 @@ class AdminProductAdapter(
                         "Eliminar"
                     ) { _, _ ->
 
-                        deleteProduct(product)
+                        onDeleteProduct(product)
                     }
 
                     .setNegativeButton(
@@ -132,38 +128,9 @@ class AdminProductAdapter(
                     .show()
             }
 
-            // EDIT BUTTON
-
             binding.btnEditProduct.setOnClickListener {
                 onEditProduct(product)
             }
-        }
-
-        private fun deleteProduct(
-            product: Product
-        ) {
-
-            db.collection("products")
-                .document(product.id)
-                .delete()
-
-                .addOnSuccessListener {
-
-                    Toast.makeText(
-                        binding.root.context,
-                        "Producto eliminado",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-                .addOnFailureListener {
-
-                    Toast.makeText(
-                        binding.root.context,
-                        "No se pudo eliminar",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
         }
     }
 }

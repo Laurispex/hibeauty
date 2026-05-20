@@ -35,4 +35,13 @@ class StoreInventoryViewModel(
             )
         }
     }
+
+    fun deleteProduct(productId: String) {
+        viewModelScope.launch {
+            productRepo.deleteProduct(productId).fold(
+                onSuccess = { load() },
+                onFailure = { _uiState.value = InventoryUiState.Error("No se pudo eliminar el producto") }
+            )
+        }
+    }
 }
