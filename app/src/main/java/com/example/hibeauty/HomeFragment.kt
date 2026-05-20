@@ -126,7 +126,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun showProducts(state: HomeUiState.Ready) {
-        val products = state.featured + state.newArrivals + state.offers
+        val highlightedProducts = (state.featured + state.newArrivals + state.offers)
+            .distinctBy { it.id }
+        val products = (highlightedProducts + state.products).distinctBy { it.id }
         if (products.isEmpty()) {
             binding.homeProductsTitle.text = "Volvieron tus favoritos 💖"
             binding.homeProductsEmptyText.isVisible = true

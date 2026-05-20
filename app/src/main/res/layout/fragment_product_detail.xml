@@ -129,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Tamaño"
+                android:text="Presentación"
                 android:textColor="@color/hib_ink"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -139,29 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/size30"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:text="30ml" />
-
-                <RadioButton
-                    android:id="@+id/size50"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:text="50ml" />
-
-                <RadioButton
-                    android:id="@+id/size100"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:text="100ml" />
-            </RadioGroup>
+                android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/detailStock"

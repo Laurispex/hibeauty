@@ -14,24 +14,13 @@ class ProductRepository(
     // ─── READ ──────────────────────────────────────────────────────────────────
 
     suspend fun getActiveProducts(): Result<List<Product>> = runCatching {
-        collection
-            .whereEqualTo("isActive", true)
-            .get()
-            .await()
-            .documents
-            .map { it.toProduct() }
-            .filter { it.isActive }
+        getAllProducts().filter { it.isActive }
     }
 
     suspend fun getProductsByCategory(category: String): Result<List<Product>> = runCatching {
-        collection
-            .whereEqualTo("category", category)
-            .whereEqualTo("isActive", true)
-            .get()
-            .await()
-            .documents
-            .map { it.toProduct() }
-            .filter { it.isActive }
+        getAllProducts().filter {
+            it.isActive && it.category.equals(category, ignoreCase = true)
+        }
     }
 
     suspend fun getProductById(productId: String): Result<Product> = runCatching {
@@ -39,7 +28,7 @@ class ProductRepository(
     }
 
     suspend fun getAllForStore(): Result<List<Product>> = runCatching {
-        collection.get().await().documents.map { it.toProduct() }.filter { it.isActive }
+        getAllProducts()
     }
 
     // ─── WRITE ─────────────────────────────────────────────────────────────────
@@ -47,7 +36,8 @@ class ProductRepository(
     suspend fun saveProduct(product: Map<String, Any>, productId: String? = null): Result<String> =
         runCatching {
             if (productId != null) {
-                collection.document(productId).set(product).await()
+                val withId = product.toMutableMap().also { it["id"] = productId }
+                collection.document(productId).set(withId).await()
                 productId
             } else {
                 val ref = collection.document()
@@ -59,5 +49,15 @@ class ProductRepository(
 
     suspend fun deleteProduct(productId: String): Result<Unit> = runCatching {
         collection.document(productId).delete().await()
+    }
+
+    private suspend fun getAllProducts(): List<Product> {
+        return collection
+            .get()
+            .await()
+            .documents
+            .map { it.toProduct() }
+            .filter { it.id.isNotBlank() && it.name.isNotBlank() }
+            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
     }
 }

@@ -6,10 +6,9 @@ import com.example.hibeauty.data.model.CartItem
 import com.example.hibeauty.data.model.RoutineStep
 import android.graphics.Paint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,7 +29,7 @@ class ProductDetailFragment(
 
     private val viewModel: ProductDetailViewModel by viewModels()
 
-    private var selectedSize: String = "30ml"
+    private var selectedPresentation: String = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,7 +40,7 @@ class ProductDetailFragment(
         observeViewModel()
 
         binding.btnAddToCart.setOnClickListener {
-            viewModel.addToCart(product, selectedSize)
+            viewModel.addToCart(product, selectedPresentation)
         }
 
         binding.btnBackDetail.setOnClickListener {
@@ -80,35 +79,56 @@ class ProductDetailFragment(
     }
 
     private fun setupPresentationSelector() {
-        binding.size30.isEnabled = product.presentations["30ml"] != null
-        binding.size50.isEnabled = product.presentations["50ml"] != null
-        binding.size100.isEnabled = product.presentations["100ml"] != null
+        binding.presentationGroup.removeAllViews()
 
-        val firstAvailable = listOf("30ml", "50ml", "100ml").firstOrNull { size ->
-            product.presentations[size]?.stock?.let { it > 0 } ?: false
+        if (product.presentations.isEmpty()) {
+            binding.detailPrice.text = 0.toCOP()
+            binding.detailStock.text = "Sin presentaciones disponibles"
+            binding.btnAddToCart.isEnabled = false
+            binding.btnAddToCart.text = "No disponible"
+            return
         }
 
+        val buttonIdsByPresentation = mutableMapOf<Int, String>()
+        val sortedPresentations = product.presentations.entries.sortedBy { it.key.lowercase() }
+
+        sortedPresentations.forEach { (name, presentation) ->
+            val button = RadioButton(requireContext()).apply {
+                id = View.generateViewId()
+                text = "$name - ${presentation.price.toCOP()}"
+                isEnabled = presentation.stock > 0
+                layoutParams = RadioGroup.LayoutParams(
+                    RadioGroup.LayoutParams.MATCH_PARENT,
+                    RadioGroup.LayoutParams.WRAP_CONTENT
+                )
+            }
+            buttonIdsByPresentation[button.id] = name
+            binding.presentationGroup.addView(button)
+        }
+
+        val firstAvailable = sortedPresentations.firstOrNull { it.value.stock > 0 }
         if (firstAvailable == null) {
-            binding.detailPrice.text = 0.toCOP()
-            binding.detailStock.text = "Sin stock disponible"
+            selectedPresentation = sortedPresentations.first().key
+            updatePresentationInfo(selectedPresentation)
             binding.btnAddToCart.isEnabled = false
             binding.btnAddToCart.text = "Sin stock"
             return
         }
 
-        selectedSize = firstAvailable
-        when (firstAvailable) {
-            "30ml" -> binding.size30.isChecked = true
-            "50ml" -> binding.size50.isChecked = true
-            "100ml" -> binding.size100.isChecked = true
+        selectedPresentation = firstAvailable.key
+        val checkedButtonId = buttonIdsByPresentation.entries
+            .firstOrNull { it.value == selectedPresentation }
+            ?.key
+        if (checkedButtonId != null) {
+            binding.presentationGroup.check(checkedButtonId)
         }
 
-        updatePresentationInfo(firstAvailable)
+        updatePresentationInfo(selectedPresentation)
 
-        binding.presentationGroup.setOnCheckedChangeListener { group, checkedId ->
-            val selected = group.findViewById<RadioButton>(checkedId)?.text?.toString() ?: return@setOnCheckedChangeListener
-            selectedSize = selected
-            updatePresentationInfo(selected)
+        binding.presentationGroup.setOnCheckedChangeListener { _, checkedId ->
+            val selected = buttonIdsByPresentation[checkedId] ?: return@setOnCheckedChangeListener
+            selectedPresentation = selected
+            updatePresentationInfo(selectedPresentation)
         }
     }
 

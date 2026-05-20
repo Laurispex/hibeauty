@@ -17,32 +17,32 @@ class CategoryProductsViewModel(
 
     fun loadAllProducts(category: String) {
         viewModelScope.launch {
-            productRepo.getActiveProducts().onSuccess { list ->
-                _products.value = list.filter { it.category == category }
+            productRepo.getProductsByCategory(category).onSuccess { list ->
+                _products.value = list
             }
         }
     }
 
     fun loadFeaturedProducts(category: String) {
         viewModelScope.launch {
-            productRepo.getActiveProducts().onSuccess { list ->
-                _products.value = list.filter { it.category == category && it.isFeatured }
+            productRepo.getProductsByCategory(category).onSuccess { list ->
+                _products.value = list.filter { it.isFeatured }
             }
         }
     }
 
     fun loadNewProducts(category: String) {
         viewModelScope.launch {
-            productRepo.getActiveProducts().onSuccess { list ->
-                _products.value = list.filter { it.category == category && it.isNew }
+            productRepo.getProductsByCategory(category).onSuccess { list ->
+                _products.value = list.filter { it.isNew }
             }
         }
     }
 
     fun loadOfferProducts(category: String) {
         viewModelScope.launch {
-            productRepo.getActiveProducts().onSuccess { list ->
-                _products.value = list.filter { it.category == category && it.isOffer }
+            productRepo.getProductsByCategory(category).onSuccess { list ->
+                _products.value = list.filter { it.isOffer }
             }
         }
     }

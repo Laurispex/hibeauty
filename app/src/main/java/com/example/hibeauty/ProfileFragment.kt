@@ -90,7 +90,7 @@ class ProfileFragment : Fragment() {
     // ─── ROLE NAVIGATION ───────────────────────────────────────────────────────
 
     private fun handleRoleNavigation(role: String) {
-        when (role.lowercase()) {
+        when (role.trim().lowercase()) {
             "admin", "administrador", "tienda" -> {
                 (requireActivity() as? MainActivity)?.showAdminNavigation()
             }

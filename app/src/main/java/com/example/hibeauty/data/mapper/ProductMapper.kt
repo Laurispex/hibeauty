@@ -15,6 +15,11 @@ fun DocumentSnapshot.toProduct(): Product {
         size to ProductPresentation(price = price, stock = stock)
     }.toMap()
 
+    val status = getString("status")?.lowercase()?.trim()
+    val isActive = getBoolean("isActive")
+        ?: getBoolean("active")
+        ?: (status == null || status !in setOf("inactive", "paused", "pausado", "eliminado"))
+
     return Product(
         id = getString("id") ?: id,
         name = getString("name") ?: "",
@@ -23,7 +28,7 @@ fun DocumentSnapshot.toProduct(): Product {
         category = getString("category") ?: "",
         benefits = getString("benefits") ?: "",
         howToUse = getString("howToUse") ?: "",
-        isActive = getBoolean("isActive") ?: true,
+        isActive = isActive,
         isFeatured = getBoolean("isFeatured") ?: false,
         isNew = getBoolean("isNew") ?: false,
         isOffer = getBoolean("isOffer") ?: false,

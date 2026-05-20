@@ -11,7 +11,12 @@ import kotlinx.coroutines.launch
 
 sealed class HomeUiState {
     object Loading : HomeUiState()
-    data class Ready(val featured: List<Product>, val newArrivals: List<Product>, val offers: List<Product>) : HomeUiState()
+    data class Ready(
+        val products: List<Product>,
+        val featured: List<Product>,
+        val newArrivals: List<Product>,
+        val offers: List<Product>
+    ) : HomeUiState()
     data class Error(val message: String) : HomeUiState()
 }
 
@@ -46,6 +51,7 @@ class HomeViewModel(
             productRepo.getActiveProducts().fold(
                 onSuccess = { products ->
                     _uiState.value = HomeUiState.Ready(
+                        products = products,
                         featured = products.filter { it.isFeatured },
                         newArrivals = products.filter { it.isNew },
                         offers = products.filter { it.isOffer }
