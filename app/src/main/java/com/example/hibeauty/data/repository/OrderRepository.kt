@@ -62,7 +62,19 @@ class OrderRepository(
             .await()
             .documents
             .map { it.toOrder() }
+            .filter { it.riderId.isBlank() }
             .sortedBy { it.createdAtMillis }
+    }
+
+    suspend fun getActiveOrdersForRider(riderId: String): Result<List<Order>> = runCatching {
+        collection
+            .whereEqualTo("riderId", riderId)
+            .get()
+            .await()
+            .documents
+            .map { it.toOrder() }
+            .filter { it.status in setOf("Aceptado", "En_camino", "En camino") }
+            .sortedByDescending { it.createdAtMillis }
     }
 
     // ─── WRITE ─────────────────────────────────────────────────────────────────
@@ -84,7 +96,7 @@ class OrderRepository(
             db.collection("users").document(userId),
             mapOf(
                 "points" to FieldValue.increment(earnedPoints),
-                "orderCount" to FieldValue.increment(1),
+                "ordersCount" to FieldValue.increment(1),
                 "totalSpent" to FieldValue.increment(orderData["total"] as? Long ?: 0L)
             ),
             SetOptions.merge()
@@ -116,12 +128,53 @@ class OrderRepository(
                     "statusHistory" to FieldValue.arrayUnion(historyEntry)
                 )
             ).await()
+            Unit
         }
+
+    suspend fun acceptForDelivery(
+        orderId: String,
+        riderId: String,
+        riderName: String,
+        riderPhone: String
+    ): Result<Unit> = runCatching {
+        val ref = collection.document(orderId)
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(ref)
+            val currentStatus = snapshot.getString("status") ?: ""
+            val currentRiderId = snapshot.getString("riderId") ?: ""
+
+            if (currentStatus != "Listo" || currentRiderId.isNotBlank()) {
+                error("Este pedido ya fue tomado por otro repartidor")
+            }
+
+            val historyEntry = hashMapOf(
+                "status" to "Aceptado",
+                "label" to "Repartidor asignado",
+                "changedAtMillis" to System.currentTimeMillis()
+            )
+
+            transaction.update(
+                ref,
+                mapOf(
+                    "status" to "Aceptado",
+                    "statusLabel" to "Repartidor asignado",
+                    "riderId" to riderId,
+                    "riderName" to riderName,
+                    "riderPhone" to riderPhone,
+                    "statusUpdatedAt" to FieldValue.serverTimestamp(),
+                    "statusHistory" to FieldValue.arrayUnion(historyEntry)
+                )
+            )
+            null
+        }.await()
+        Unit
+    }
 
     suspend fun assignRider(orderId: String, riderId: String, riderName: String): Result<Unit> =
         runCatching {
             collection.document(orderId).update(
                 mapOf("riderId" to riderId, "riderName" to riderName)
             ).await()
+            Unit
         }
 }

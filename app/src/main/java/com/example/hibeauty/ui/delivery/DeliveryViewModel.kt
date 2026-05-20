@@ -8,7 +8,6 @@ import com.example.hibeauty.data.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 sealed class DeliveryUiState {
     object Loading : DeliveryUiState()
@@ -35,12 +34,12 @@ class DeliveryViewModel(
         viewModelScope.launch {
             _uiState.value = DeliveryUiState.Loading
             val userResult = userRepo.getUserProfile(uid)
-            val readyResult = orderRepo.getOrdersByStatus("Listo")
-            val activeResult = orderRepo.getOrdersByStatus("En camino")
+            val readyResult = orderRepo.getOrdersReadyForDelivery()
+            val activeResult = orderRepo.getActiveOrdersForRider(uid)
 
             val user = userResult.getOrNull()
             val available = readyResult.getOrNull() ?: emptyList()
-            val myActive = activeResult.getOrNull()?.firstOrNull { it.riderId == uid }
+            val myActive = activeResult.getOrNull()?.firstOrNull()
 
             _uiState.value = DeliveryUiState.Ready(
                 welcomeName = user?.name ?: "Repartidor",
@@ -56,10 +55,18 @@ class DeliveryViewModel(
         val uid = userRepo.currentFirebaseUser?.uid ?: return
         viewModelScope.launch {
             val userRes = userRepo.getUserProfile(uid)
-            val riderName = userRes.getOrNull()?.name ?: "Repartidor"
-            orderRepo.assignRider(order.id, uid, riderName)
-            orderRepo.updateStatus(order.id, "En camino", "Pedido en camino")
-            load()
+            val rider = userRes.getOrNull()
+            val riderName = rider?.name ?: "Repartidor"
+            val riderPhone = rider?.phone ?: ""
+            orderRepo.acceptForDelivery(order.id, uid, riderName, riderPhone).fold(
+                onSuccess = { load() },
+                onFailure = {
+                    _uiState.value = DeliveryUiState.Error(
+                        it.message ?: "No se pudo aceptar el pedido"
+                    )
+                    load()
+                }
+            )
         }
     }
 

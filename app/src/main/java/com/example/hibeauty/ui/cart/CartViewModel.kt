@@ -7,6 +7,7 @@ import com.example.hibeauty.data.repository.CartRepository
 import com.example.hibeauty.data.repository.OrderRepository
 import com.example.hibeauty.data.repository.ProductRepository
 import com.example.hibeauty.data.repository.UserRepository
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,7 +68,7 @@ class CartViewModel(
         }
     }
 
-    fun checkout(userId: String, items: List<CartItem>) {
+    fun checkout(userId: String, items: List<CartItem>, deliveryAddress: String) {
         viewModelScope.launch {
             _checkoutState.value = CheckoutState.Loading
             
@@ -79,7 +80,12 @@ class CartViewModel(
             val user = userRes.getOrThrow()
             val userName = user.name.ifBlank { "Cliente" }
             val userPhone = user.phone
-            val address = user.address
+            val address = deliveryAddress.trim().ifBlank { user.address }
+
+            if (address.isBlank()) {
+                _checkoutState.value = CheckoutState.Error("Ingresa una dirección de entrega")
+                return@launch
+            }
 
             val db = FirebaseFirestore.getInstance()
             val batch = db.batch()
@@ -100,7 +106,7 @@ class CartViewModel(
                 }
                 batch.update(
                     db.collection("products").document(item.productId),
-                    "presentations.${item.presentation}.stock",
+                    FieldPath.of("presentations", item.presentation, "stock"),
                     currentStock - item.quantity
                 )
                 checkedItems.add(item)
@@ -140,7 +146,12 @@ class CartViewModel(
             )
 
             orderRepo.createOrder(userId, orderData, checkedItems.map { it.id }, batch, earnedPoints).fold(
-                onSuccess = { orderId -> _checkoutState.value = CheckoutState.Success(orderId) },
+                onSuccess = { orderId ->
+                    if (address != user.address) {
+                        userRepo.updateUserProfile(userId, mapOf("address" to address))
+                    }
+                    _checkoutState.value = CheckoutState.Success(orderId)
+                },
                 onFailure = { _checkoutState.value = CheckoutState.Error("No se pudo crear el pedido") }
             )
         }

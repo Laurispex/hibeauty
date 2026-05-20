@@ -1,6 +1,7 @@
 package com.example.hibeauty.data.repository
 
 import com.example.hibeauty.data.model.CartItem
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -27,10 +28,32 @@ class CartRepository(
 
     suspend fun removeItem(userId: String, itemId: String): Result<Unit> = runCatching {
         cartRef(userId).document(itemId).delete().await()
+        Unit
     }
 
     suspend fun addItemToCart(userId: String, data: Map<String, Any>): Result<Unit> = runCatching {
-        cartRef(userId).add(data).await()
+        val productId = data["productId"] as? String ?: ""
+        val presentation = data["presentation"] as? String ?: ""
+        val existingItem = cartRef(userId)
+            .whereEqualTo("productId", productId)
+            .whereEqualTo("presentation", presentation)
+            .limit(1)
+            .get()
+            .await()
+            .documents
+            .firstOrNull()
+
+        if (existingItem != null) {
+            existingItem.reference.update(
+                mapOf(
+                    "quantity" to FieldValue.increment(1),
+                    "updatedAt" to FieldValue.serverTimestamp()
+                )
+            ).await()
+        } else {
+            cartRef(userId).add(data).await()
+        }
+        Unit
     }
 
     suspend fun clearCart(userId: String): Result<Unit> = runCatching {
@@ -38,5 +61,6 @@ class CartRepository(
         val batch = db.batch()
         items.documents.forEach { batch.delete(it.reference) }
         batch.commit().await()
+        Unit
     }
 }

@@ -87,7 +87,7 @@ class OrderAdapter(
                 "Preparando" -> "2 de 4 - Preparando tu compra"
                 "Listo" -> "2 de 4 - Listo para despacho"
                 "Aceptado" -> "3 de 4 - Repartidor asignado"
-                "En_camino", "en_camino" -> "3 de 4 - Va en camino"
+                "En_camino", "en_camino", "En camino" -> "3 de 4 - Va en camino"
                 "Domicilio Propio" -> "3 de 4 - En ruta directa de tienda"
                 "Entregado" -> "4 de 4 - Pedido entregado"
                 "Cancelado" -> "Pedido cancelado"
@@ -99,7 +99,7 @@ class OrderAdapter(
             return when (status) {
                 "Pendiente" -> "● Pedido  ○ Preparando  ○ En camino  ○ Entregado"
                 "Preparando", "Listo" -> "● Pedido  ● Preparando  ○ En camino  ○ Entregado"
-                "Aceptado", "En_camino", "en_camino", "Domicilio Propio" -> "● Pedido  ● Preparando  ● En camino  ○ Entregado"
+                "Aceptado", "En_camino", "en_camino", "En camino", "Domicilio Propio" -> "● Pedido  ● Preparando  ● En camino  ○ Entregado"
                 "Entregado" -> "● Pedido  ● Preparando  ● En camino  ● Entregado"
                 else -> "● Pedido  ○ Preparando  ○ En camino  ○ Entregado"
             }

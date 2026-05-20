@@ -101,7 +101,7 @@ class ProfileFragment : Fragment() {
             }
             else -> {
                 // Already handled by profileState.LoggedIn
-                toast("Bienvenida a HiBeauty 💖")
+                toast("Bienvenida a HiBeauty")
             }
         }
     }

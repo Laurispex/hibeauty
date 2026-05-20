@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.text.InputType
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -53,6 +55,11 @@ class CartFragment : Fragment() {
         binding.cartRecyclerView.adapter = cartAdapter
 
         binding.btnCheckout.setOnClickListener { initiateCheckout() }
+        binding.btnAddMore.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HomeFragment())
+                .commit()
+        }
 
         observeViewModel()
         loadCart()
@@ -106,6 +113,10 @@ class CartFragment : Fragment() {
                             toast("Pedido creado correctamente 🎉")
                             viewModel.resetCheckout()
                             loadCart()
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, UserOrdersFragment())
+                                .addToBackStack(null)
+                                .commit()
                         }
                         is CheckoutState.StockError -> {
                             resetCheckoutButton()
@@ -186,7 +197,33 @@ class CartFragment : Fragment() {
             return
         }
         val state = viewModel.cartState.value as? CartUiState.Ready ?: return
-        viewModel.checkout(user.uid, state.items)
+        showAddressDialog { address ->
+            viewModel.checkout(user.uid, state.items, address)
+        }
+    }
+
+    private fun showAddressDialog(onConfirm: (String) -> Unit) {
+        val input = EditText(requireContext()).apply {
+            hint = "Dirección de entrega"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            minLines = 2
+            setSingleLine(false)
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Dirección de entrega")
+            .setMessage("Confirma dónde quieres recibir tu pedido.")
+            .setView(input)
+            .setPositiveButton("Crear pedido") { _, _ ->
+                val address = input.text.toString().trim()
+                if (address.isBlank()) {
+                    toast("Ingresa una dirección de entrega")
+                } else {
+                    onConfirm(address)
+                }
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     private fun showLoginDialog() {
