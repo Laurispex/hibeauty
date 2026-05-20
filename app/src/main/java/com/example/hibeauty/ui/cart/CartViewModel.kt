@@ -42,6 +42,16 @@ class CartViewModel(
     private val _checkoutState = MutableStateFlow<CheckoutState>(CheckoutState.Idle)
     val checkoutState: StateFlow<CheckoutState> = _checkoutState
 
+    private var currentShipping = 8_000L
+
+    fun setShippingCost(cost: Long) {
+        currentShipping = cost
+        val state = _cartState.value
+        if (state is CartUiState.Ready) {
+            _cartState.value = state.copy(shipping = cost, total = state.subtotal + cost)
+        }
+    }
+
     fun loadCart(userId: String?) {
         if (userId == null) { _cartState.value = CartUiState.NotLoggedIn; return }
         viewModelScope.launch {
@@ -52,8 +62,7 @@ class CartViewModel(
                         _cartState.value = CartUiState.Empty
                     } else {
                         val subtotal = items.sumOf { it.price * it.quantity }
-                        val shipping = 8_000L
-                        _cartState.value = CartUiState.Ready(items, subtotal, shipping, subtotal + shipping)
+                        _cartState.value = CartUiState.Ready(items, subtotal, currentShipping, subtotal + currentShipping)
                     }
                 },
                 onFailure = { _cartState.value = CartUiState.Error("No se pudo cargar el carrito") }
@@ -113,7 +122,7 @@ class CartViewModel(
             }
 
             val subtotal = checkedItems.sumOf { it.price * it.quantity }
-            val shipping = 8_000L
+            val shipping = currentShipping
             val total = subtotal + shipping
             val earnedPoints = (subtotal / 1000L).coerceAtLeast(1L)
 

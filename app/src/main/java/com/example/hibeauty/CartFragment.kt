@@ -61,6 +61,18 @@ class CartFragment : Fragment() {
                 .commit()
         }
 
+        binding.layoutStandardDelivery.setOnClickListener {
+            binding.layoutStandardDelivery.setBackgroundResource(R.drawable.bg_status_track)
+            binding.layoutExpressDelivery.setBackgroundResource(R.drawable.bg_search)
+            viewModel.setShippingCost(8000L)
+        }
+
+        binding.layoutExpressDelivery.setOnClickListener {
+            binding.layoutStandardDelivery.setBackgroundResource(R.drawable.bg_search)
+            binding.layoutExpressDelivery.setBackgroundResource(R.drawable.bg_status_track)
+            viewModel.setShippingCost(15000L)
+        }
+
         observeViewModel()
         loadCart()
     }

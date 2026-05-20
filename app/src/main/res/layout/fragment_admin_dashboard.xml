@@ -76,8 +76,7 @@
                     android:background="@drawable/bg_soft_circle"
                     android:backgroundTint="#40FFFFFF"
                     android:padding="13dp"
-                    android:src="@drawable/ic_back"
-                    android:rotation="180"
+                    android:src="@drawable/ic_logout"
                     app:tint="@color/white" />
             </LinearLayout>
 

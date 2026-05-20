@@ -60,7 +60,7 @@ class RoutineAdapter(
             // STEP NUMBER
 
             binding.stepIcon.text =
-                (adapterPosition + 1)
+                (bindingAdapterPosition + 1)
                     .toString()
 
             // COMPLETED STATE
